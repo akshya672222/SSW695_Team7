@@ -37,3 +37,5 @@ Scrum meeting notes:
 5) Your requirements and intended features may change during scrums. Make sure you update this Readme if that happens(I support active change in reqs).
 6) Make sure you attend meet regularly and show me the completed requirements in meet.
 7) Team members are allowed to work in meet and at home as well but they need to make sure that there part of work is done before meet.
+
+Trello Link: https://trello.com/b/M7BJNTxQ/ssw695
