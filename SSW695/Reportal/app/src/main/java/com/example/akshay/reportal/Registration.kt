@@ -12,11 +12,14 @@ class Registration : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-//        println("hello started the activity")
-        println("hello came here..")
+
+//        if (getIntent().getBooleanExtra("EXIT", false)) {
+//            println("came here")
+//            finish();
+//        }
+
         registerBtn.setOnClickListener {
-            println("hello")
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, PostIssueActivity::class.java)
             startActivity(intent)
         }
     }
