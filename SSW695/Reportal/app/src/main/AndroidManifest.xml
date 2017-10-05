@@ -20,6 +20,12 @@
         <activity android:name=".Settings" />
         <activity android:name=".historyActivity" />
         <activity android:name=".activity_feeds"></activity>
+        <activity
+            android:name=".report">
+
+
+
+        </activity>
     </application>
 
 </manifest>
