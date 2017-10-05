@@ -19,7 +19,7 @@
         <activity android:name=".Registration" />
         <activity android:name=".Settings" />
         <activity android:name=".historyActivity" />
-        <activity android:name=".activity_feeds"></activity>
+        <activity android:name=".activity_feeds" />
     </application>
 
 </manifest>
