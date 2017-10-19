@@ -6,7 +6,11 @@ package com.example.akshay.reportal
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_forgotpassword.*
 import kotlinx.android.synthetic.main.activity_registration.*
+
 
 class Registration : AppCompatActivity() {
 
@@ -15,20 +19,41 @@ class Registration : AppCompatActivity() {
         setContentView(R.layout.activity_registration)
 
         btnRegister.setOnClickListener {
-
-            if (first_name.toString().length == 0 || last_name.toString().length == 0 || emailid.toString().length == 0 )
-                textViewMessage.text = "Field cannot be empty!"
-            else if (password.toString().length >= 8 || password.toString().length == 0)
-                textViewMessage.text = "password.toString().word should be between 0-8 chareactar"
-            else if (confirm_password.toString().length != password.toString().length)
-                textViewMessage.text = "password.toString().word not matched"
+            val alertDialog = AlertDialog.Builder(this ).create()
+            val fname: String = first_name.text.toString()
+            val lname: String = last_name.text.toString()
+            val email: String = emailid.text.toString()
+            val password: String = password.text.toString()
+            val confPassword: String = confirm_password.text.toString()
+            if (fname.length == 0 || lname.length == 0 || email.length == 0) {
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Fields cannot be empty!")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (password.length >= 8 || password.length == 0){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password should be between 0-8 chareactar")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (confPassword.length != password.length){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password not matched")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
             else{
-                textViewMessage.text = "$first_name $last_name Your are registered!"
+                Toast.makeText(applicationContext, "Registered successfully", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, Homepage::class.java)
                 startActivity(intent)
             }
-
-
         }
     }
 }
