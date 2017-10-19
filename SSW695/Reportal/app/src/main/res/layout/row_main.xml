@@ -21,9 +21,8 @@
 
     <TextView
         android:id="@+id/description_textview"
-        android:layout_width="wrap_content"
-        android:maxWidth ="350sp"
-        android:layout_height="wrap_content"
+        android:layout_width="219dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="@android:color/black"
@@ -34,12 +33,24 @@
     <TextView
         android:id="@+id/status_textview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="37dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/description_textview"
         app:layout_constraintTop_toBottomOf="@+id/description_textview" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="94dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/description_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/description_textview"
+        app:layout_constraintTop_toTopOf="@+id/description_textview"
+        app:layout_constraintVertical_bias="0.421"
+        app:srcCompat="@drawable/stevens" />
 
 </android.support.constraint.ConstraintLayout>
