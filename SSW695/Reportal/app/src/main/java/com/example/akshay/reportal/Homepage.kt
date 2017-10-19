@@ -14,19 +14,19 @@ class Homepage : AppCompatActivity() {
         setContentView(R.layout.activity_homepage)
 
         btnFeed.setOnClickListener {
-            val intent = Intent(this, Feed::class.java)
+            intent = Intent(this, Feed::class.java)
             startActivity(intent)
         }
         btnHistory.setOnClickListener {
-            val intent = Intent(this, btnHistory::class.java)
+            intent = Intent(this, History::class.java)
             startActivity(intent)
         }
         btnReport.setOnClickListener {
-            val intent = Intent(this, PostIssueActivity::class.java)
+            intent = Intent(this, PostIssueActivity::class.java)
             startActivity(intent)
         }
         btnSettings.setOnClickListener {
-            val intent = Intent(this, Settings::class.java)
+            intent = Intent(this, Settings::class.java)
             startActivity(intent)
         }
 

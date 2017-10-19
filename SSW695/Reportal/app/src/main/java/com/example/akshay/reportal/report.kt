@@ -11,6 +11,6 @@ class report : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.report)
+        setContentView(R.layout.activity_preview_submission)
     }
 }

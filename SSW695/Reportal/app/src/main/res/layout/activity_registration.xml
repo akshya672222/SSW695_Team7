@@ -8,8 +8,18 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="89dp">
 
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <EditText
-            android:id="@+id/fNameEditText"
+            android:id="@+id/first_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -21,14 +31,14 @@
             android:ems="10"
             android:hint="First Name"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/lNameEditText"
+            app:layout_constraintBottom_toTopOf="@+id/last_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText,LabelFor" />
 
         <EditText
-            android:id="@+id/lNameEditText"
+            android:id="@+id/last_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -40,14 +50,14 @@
             android:ems="10"
             android:hint="Last Name"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/emailEditText"
+            app:layout_constraintBottom_toTopOf="@+id/emailid"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/first_name"
             tools:ignore="HardcodedText,LabelFor" />
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/emailid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -59,14 +69,14 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
+            app:layout_constraintBottom_toTopOf="@+id/password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/last_name"
             tools:ignore="HardcodedText,LabelFor" />
 
         <EditText
-            android:id="@+id/passwordEditText"
+            android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -78,14 +88,14 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
-            app:layout_constraintBottom_toTopOf="@+id/confPasswordEditText"
+            app:layout_constraintBottom_toTopOf="@+id/confirm_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditText"
+            app:layout_constraintTop_toBottomOf="@+id/emailid"
             tools:ignore="HardcodedText,LabelFor" />
 
         <EditText
-            android:id="@+id/confPasswordEditText"
+            android:id="@+id/confirm_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -97,14 +107,14 @@
             android:ems="10"
             android:hint="Confirm_Password"
             android:inputType="textPassword"
-            app:layout_constraintBottom_toTopOf="@+id/registerBtn"
+            app:layout_constraintBottom_toTopOf="@+id/btnRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+            app:layout_constraintTop_toBottomOf="@+id/password"
             tools:ignore="HardcodedText,LabelFor" />
 
         <Button
-            android:id="@+id/registerBtn"
+            android:id="@+id/btnRegister"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -117,7 +127,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confPasswordEditText"
+            app:layout_constraintTop_toBottomOf="@+id/confirm_password"
             tools:ignore="HardcodedText,LabelFor" />
 
 </android.support.constraint.ConstraintLayout>

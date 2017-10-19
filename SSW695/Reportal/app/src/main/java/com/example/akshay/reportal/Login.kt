@@ -17,12 +17,12 @@ class Login : AppCompatActivity() {
             val intent = Intent(this, Homepage::class.java)
             startActivity(intent)
         }
-        registerBtn.setOnClickListener {
-            val intent = Intent(this, Registration::class.java)
+        btnRegister.setOnClickListener {
+            intent = Intent(this, Registration::class.java)
             startActivity(intent)
         }
         forgotPassword.setOnClickListener {
-            val intent = Intent(this, Registration::class.java)
+            intent = Intent(this, Registration::class.java)
             startActivity(intent)
         }
     }
