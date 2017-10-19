@@ -20,7 +20,14 @@
         <activity android:name=".Settings" />
         <activity android:name=".historyActivity" />
         <activity android:name=".activity_feeds" />
-        <activity android:name=".PostIssueActivity"></activity>
+        <activity android:name=".PostIssueActivity" />
+        <activity android:name=".loginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
