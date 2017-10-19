@@ -10,91 +10,96 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <ImageView
+    <TextView
+        android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/stevens"
-        android:layout_marginTop="14dp"
+        android:layout_above="@+id/btnRegister"
+        android:layout_alignEnd="@+id/password"
+        android:layout_marginBottom="24dp"
+        android:text="Forgot password?"
+        android:textColor="@color/colorPrimary" />
+
+    <ImageView
         android:id="@+id/stevensLogo"
+        android:layout_width="170sp"
+        android:layout_height="170sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
         android:adjustViewBounds="true"
-        android:cropToPadding="true" />
+        android:cropToPadding="true"
+        app:srcCompat="@drawable/stevens" />
 
     <Button
-        android:text="SIGN UP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="96dp"
         android:id="@+id/btnRegister"
-        android:textColorLink="@android:color/background_dark"
-        android:textSize="22sp"
-        android:background="@drawable/side_nav_bar"
-        android:textStyle="normal|italic"
-        android:textAlignment="center"
-        android:textColor="@color/color_icon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/password"
-        android:layout_alignEnd="@+id/password" />
-
-    <Button
-        android:text="LOGIN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/logInBtn"
+        android:layout_alignEnd="@+id/password"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/side_nav_bar"
+        android:elevation="11dp"
+        android:fontFamily="sans_serif"
+        android:text="Sign up"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/color_icon"
         android:textColorLink="@android:color/background_dark"
         android:textSize="22sp"
-        android:background="@drawable/side_nav_bar"
-        android:textColor="@color/color_icon"
-        android:elevation="11dp"
-        android:textStyle="normal|italic"
+        android:textStyle="normal" />
+
+    <Button
+        android:id="@+id/logInBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btnRegister"
         android:layout_alignBottom="@+id/btnRegister"
         android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password" />
+        android:layout_alignStart="@+id/password"
+        android:background="@drawable/side_nav_bar"
+        android:elevation="11dp"
+        android:fontFamily="sans_serif"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textColor="@color/color_icon"
+        android:textColorLink="@android:color/background_dark"
+        android:textSize="22sp"
+        android:textStyle="normal" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
         android:id="@+id/userName"
-        android:contentDescription="User Name"
-        android:hint="User Name"
-        android:typeface="serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:fontFamily="sans_serif"
+        android:hint="email"
+        android:inputType="textPersonName"
+        android:singleLine="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textStyle="normal|bold"
         android:textColor="@android:color/background_dark"
         android:textColorLink="@android:color/background_dark"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password" />
+        android:textSize="24sp"
+        android:textStyle="normal"
+        android:typeface="serif" />
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
+        android:layout_below="@+id/userName"
+        android:layout_centerHorizontal="true"
         android:ems="10"
-        android:layout_marginBottom="23dp"
-        android:id="@+id/password"
-        android:hint="Password"
+        android:fontFamily="sans_serif"
+        android:hint="password"
+        android:inputType="textPassword"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:typeface="serif"
-        android:textStyle="normal|bold"
-        android:fontFamily="serif"
         android:textColor="@android:color/background_dark"
         android:textColorLink="@android:color/background_dark"
-        android:layout_above="@+id/btnRegister"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="normal"
+        android:typeface="serif" />
 
-    <TextView
-        android:text="Forgot password?"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/forgotPassword"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@+id/logInBtn"
-        android:layout_alignRight="@+id/stevensLogo"
-        android:layout_alignEnd="@+id/stevensLogo"
-        android:layout_marginTop="36dp" />
 </RelativeLayout>
