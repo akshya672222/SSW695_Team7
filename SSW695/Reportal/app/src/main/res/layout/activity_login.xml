@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.sonal.myapplication.MainActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/stevens"
+        android:layout_marginTop="14dp"
+        android:id="@+id/stevensLogo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true" />
+
+    <Button
+        android:text="SIGN UP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:id="@+id/registerBtn"
+        android:textColorLink="@android:color/background_dark"
+        android:textSize="22sp"
+        android:background="@drawable/side_nav_bar"
+        android:textStyle="normal|italic"
+        android:textAlignment="center"
+        android:textColor="@color/color_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/password"
+        android:layout_alignEnd="@+id/password" />
+
+    <Button
+        android:text="LOGIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logInBtn"
+        android:textColorLink="@android:color/background_dark"
+        android:textSize="22sp"
+        android:background="@drawable/side_nav_bar"
+        android:textColor="@color/color_icon"
+        android:elevation="11dp"
+        android:textStyle="normal|italic"
+        android:layout_alignBaseline="@+id/registerBtn"
+        android:layout_alignBottom="@+id/registerBtn"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/userName"
+        android:contentDescription="User Name"
+        android:hint="User Name"
+        android:typeface="serif"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textStyle="normal|bold"
+        android:textColor="@android:color/background_dark"
+        android:textColorLink="@android:color/background_dark"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_marginBottom="23dp"
+        android:id="@+id/password"
+        android:hint="Password"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:typeface="serif"
+        android:textStyle="normal|bold"
+        android:fontFamily="serif"
+        android:textColor="@android:color/background_dark"
+        android:textColorLink="@android:color/background_dark"
+        android:layout_above="@+id/registerBtn"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Forgot password?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgotPassword"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/logInBtn"
+        android:layout_alignRight="@+id/stevensLogo"
+        android:layout_alignEnd="@+id/stevensLogo"
+        android:layout_marginTop="36dp" />
+</RelativeLayout>

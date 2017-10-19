@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.activity_feeds.*
 
-class activity_feeds : AppCompatActivity() {
+class Feed : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

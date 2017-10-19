@@ -19,7 +19,7 @@ class Registration : AppCompatActivity() {
 //        }
 
         registerBtn.setOnClickListener {
-            val intent = Intent(this, PostIssueActivity::class.java)
+            val intent = Intent(this, Homepage::class.java)
             startActivity(intent)
         }
     }

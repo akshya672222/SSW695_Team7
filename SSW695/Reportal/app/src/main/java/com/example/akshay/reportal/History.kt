@@ -18,7 +18,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.history.*
 
-class historyActivity: AppCompatActivity() {
+class History : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
