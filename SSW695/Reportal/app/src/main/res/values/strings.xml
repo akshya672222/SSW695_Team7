@@ -4,4 +4,11 @@
     <string name="description">Description</string>
     <string name="imageIssue">Description</string>
     <string name="report1">1</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="subscription_page_lable">My Subscriptions</string>
+    <string name="allEvents_page_lable">All Events</string>
 </resources>
