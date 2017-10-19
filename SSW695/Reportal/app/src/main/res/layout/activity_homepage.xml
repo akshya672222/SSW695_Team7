@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:fontFamily="cursive"
+                android:fontFamily="sans_serif"
                 android:text="FEED    "
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:fontFamily="cursive"
+                android:fontFamily="sans_serif"
                 android:text="HISTORY"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:fontFamily="cursive"
+                android:fontFamily="sans_serif"
                 android:text="REPORT "
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:fontFamily="cursive"
+                android:fontFamily="sans_serif"
                 android:text="SETTINGS"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
         </LinearLayout>
