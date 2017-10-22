@@ -2,8 +2,18 @@
 <resources>
     <color name="colorPrimary">#9D1535</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#181d2d</color>
+    <color name="colorAccent">#ea810f</color>
     <color name="color_icon">#ffffff</color>
+    <color name="OrangeDark">#ea810f</color>
+    <color name="OrangeLight">#f7a746</color>
+    <color name="GreenDark">#328e07</color>
+    <color name="GreenLight">#44b715</color>
+    <color name="BlueDark">#329aba</color>
+    <color name="BlueLight">#68b9d8</color>
+    <color name="RedDark">#d3333c</color>
+    <color name="RedLight">#f2464f</color>
+    <color name="GreyDark">#606060</color>
+    <color name="GreyLight">#878787</color>
     <item name="green" type="color">#FF99CC00</item>
 
 

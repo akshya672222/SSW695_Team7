@@ -18,27 +18,17 @@
         android:layout_alignEnd="@+id/password"
         android:layout_marginBottom="24dp"
         android:text="Forgot password?"
-        android:textColor="@color/colorPrimary" />
-
-    <ImageView
-        android:id="@+id/stevensLogo"
-        android:layout_width="170sp"
-        android:layout_height="170sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        app:srcCompat="@drawable/stevens" />
+        android:textColor="@color/BlueDark" />
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/password"
+        android:layout_alignEnd="@+id/forgotPassword"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="22dp"
         android:background="@drawable/side_nav_bar"
+        android:backgroundTint="@color/OrangeDark"
         android:elevation="11dp"
         android:fontFamily="sans_serif"
         android:text="Sign up"
@@ -58,12 +48,13 @@
         android:layout_alignLeft="@+id/password"
         android:layout_alignStart="@+id/password"
         android:background="@drawable/side_nav_bar"
+        android:backgroundTint="@color/OrangeDark"
         android:elevation="11dp"
         android:fontFamily="sans_serif"
         android:text="Login"
         android:textAllCaps="false"
         android:textColor="@color/color_icon"
-        android:textColorLink="@android:color/background_dark"
+        android:textColorLink="@color/OrangeDark"
         android:textSize="22sp"
         android:textStyle="normal" />
 
@@ -71,17 +62,16 @@
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/password"
+        android:layout_above="@+id/password"
         android:layout_alignStart="@+id/password"
-        android:layout_centerVertical="true"
         android:ems="10"
         android:fontFamily="sans_serif"
         android:hint="email"
         android:inputType="textPersonName"
         android:singleLine="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@android:color/background_dark"
-        android:textColorLink="@android:color/background_dark"
+        android:textColor="@color/RedDark"
+        android:textColorLink="@color/RedDark"
         android:textSize="24sp"
         android:textStyle="normal"
         android:typeface="serif" />
@@ -90,16 +80,26 @@
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userName"
+        android:layout_above="@+id/forgotPassword"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
         android:ems="10"
         android:fontFamily="sans_serif"
         android:hint="password"
         android:inputType="textPassword"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@android:color/background_dark"
-        android:textColorLink="@android:color/background_dark"
+        android:textColor="@color/RedDark"
+        android:textColorLink="@color/RedDark"
         android:textStyle="normal"
         android:typeface="serif" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        app:srcCompat="@drawable/Reportali" />
 
 </RelativeLayout>

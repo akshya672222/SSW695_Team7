@@ -44,7 +44,7 @@ class PostIssueActivity : AppCompatActivity() {
             checkPermissionGallery()
         }
     }
-
+/*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
@@ -132,5 +132,5 @@ class PostIssueActivity : AppCompatActivity() {
         }
         return c // returns null if camera is unavailable
     }
-
+*/
 }
