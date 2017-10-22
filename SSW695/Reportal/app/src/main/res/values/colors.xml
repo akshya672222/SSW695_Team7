@@ -14,6 +14,7 @@
     <color name="RedLight">#f2464f</color>
     <color name="GreyDark">#606060</color>
     <color name="GreyLight">#878787</color>
+    <color name="BlueLightOpaque">#6468b9d8</color>
     <item name="green" type="color">#FF99CC00</item>
 
 

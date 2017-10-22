@@ -21,25 +21,24 @@
 
             <Button
                 android:id="@+id/btnFeed"
-                android:layout_width="232dp"
+                android:layout_width="112dp"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/Feedc"
-                android:padding="10dp"
+                android:backgroundTint="@color/OrangeLight"
+                android:gravity="bottom"
                 android:text="FEED"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <Button
                 android:id="@+id/btnHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/Historyc"
                 android:backgroundTint="@color/BlueDark"
-                android:padding="10dp"
+                android:gravity="bottom"
                 android:text="HISTORY"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
 
@@ -51,24 +50,24 @@
 
             <Button
                 android:id="@+id/btnReport"
-                android:layout_width="223dp"
+                android:layout_width="130dp"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/Reportc"
-                android:padding="10dp"
+                android:backgroundTint="@color/GreenLight"
+                android:gravity="bottom"
                 android:text="REPORT "
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <Button
                 android:id="@+id/btnSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/Settingsc"
-                android:padding="10dp"
+                android:backgroundTint="@color/RedLight"
+                android:gravity="bottom"
                 android:text="SETTINGS"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
     </LinearLayout>
