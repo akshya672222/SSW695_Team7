@@ -8,30 +8,39 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="@color/BlueLight"
+        android:padding="3dp"
+        tools:layout_editor_absoluteX="-5dp"
+        tools:layout_editor_absoluteY="4dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="50dp"
+        android:layout_height="57dp"
+        android:padding="3dp"
+        app:srcCompat="@drawable/Historyi"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="1dp" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/Historyf"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="1dp" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="471dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="449dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="History"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

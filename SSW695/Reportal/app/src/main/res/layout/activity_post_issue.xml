@@ -53,7 +53,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"
+                android:background="@color/BlueDark"
+                android:backgroundTint="@color/GreenLight"
                 android:text="Camera"
+                android:textColor="@color/color_icon"
+                android:textSize="@dimen/activity_horizontal_margin"
                 app:layout_constraintBottom_toTopOf="@+id/capturedImageView"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -64,7 +68,10 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
+                android:background="@color/GreenDark"
                 android:text="Gallery"
+                android:textColor="@color/color_icon"
+                android:textSize="@dimen/activity_horizontal_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/capturedImageView" />
         </LinearLayout>

@@ -83,7 +83,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@android:color/holo_red_light"
+                android:background="@color/GreenDark"
                 android:text="@string/post"
                 tools:ignore="HardcodedText" />
 

@@ -37,11 +37,11 @@ class PostIssueActivity : AppCompatActivity() {
         setContentView(R.layout.activity_post_issue)
  //       val intent = Intent(this, MainActivity::class.java)
         buttonCamera.setOnClickListener {
-            checkPermissionCamera()
+           // checkPermissionCamera()
         }
  //       val intentToHistory = Intent(this, historyActivity::class.java)
         buttonGallery.setOnClickListener {
-            checkPermissionGallery()
+            //checkPermissionGallery()
         }
     }
 /*
