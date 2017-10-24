@@ -27,7 +27,7 @@
             android:layout_height="57dp"
             android:layout_weight="1"
             android:padding="3dp"
-            app:srcCompat="@drawable/reporti"
+            app:srcCompat="@drawable/reportc"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="0dp" />
 
@@ -58,7 +58,7 @@
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -75,6 +75,8 @@
             android:id="@+id/buttonViewHolder"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="0dp"
             android:layout_weight="2"
             android:orientation="horizontal"
             android:weightSum="2"
@@ -91,9 +93,11 @@
                 android:layout_weight="1"
                 android:background="@color/BlueDark"
                 android:backgroundTint="@color/GreenLight"
+                android:padding="10dp"
                 android:text="Camera"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
                 android:textColor="@color/color_icon"
-                android:textSize="@dimen/activity_horizontal_margin"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/capturedImageView"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -105,9 +109,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
                 android:background="@color/GreenDark"
+                android:padding="10dp"
                 android:text="Gallery"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
                 android:textColor="@color/color_icon"
-                android:textSize="@dimen/activity_horizontal_margin"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/capturedImageView" />
 
