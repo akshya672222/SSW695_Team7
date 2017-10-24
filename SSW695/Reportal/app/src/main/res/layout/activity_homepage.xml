@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="368dp"
-        android:layout_height="551dp"
+        android:layout_height="495dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -26,25 +26,28 @@
             android:layout_weight=".5"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnReport"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:backgroundTint="@color/GreenLight"
-                android:text="REPORT "
+                android:backgroundTint="@color/GreenLightOpaque"
+                android:scaleType="fitCenter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:textColor="@color/color_icon" />
+                android:textColor="@color/color_icon"
+                app:srcCompat="@drawable/reportf"
+                tools:fontFamily="@font/h" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnFeed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:backgroundTint="@color/OrangeLight"
-                android:text="FEED"
+                android:backgroundTint="@color/OrangeLightOpaque"
+                android:scaleType="fitCenter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:textColor="@color/color_icon" />
+                android:textColor="@color/color_icon"
+                app:srcCompat="@drawable/feedf" />
 
         </LinearLayout>
 
@@ -54,25 +57,27 @@
             android:layout_weight=".5"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:backgroundTint="@color/BlueDark"
-                android:text="HISTORY"
+                android:backgroundTint="@color/BlueLightOpaque"
+                android:scaleType="fitCenter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:textColor="@color/color_icon" />
+                android:textColor="@color/color_icon"
+                app:srcCompat="@drawable/historyf" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnSettings"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:backgroundTint="@color/RedLight"
-                android:text="SETTINGS"
+                android:backgroundTint="@color/RedLightOpaque"
+                android:scaleType="fitCenter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:textColor="@color/color_icon" />
+                android:textColor="@color/color_icon"
+                app:srcCompat="@drawable/settingsf" />
         </LinearLayout>
 
     </LinearLayout>

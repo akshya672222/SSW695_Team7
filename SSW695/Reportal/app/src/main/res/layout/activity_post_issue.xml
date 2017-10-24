@@ -6,6 +6,39 @@
     android:layout_height="match_parent"
     tools:context="com.example.akshay.reportal.PostIssueActivity">
 
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.akshay.reportal.PostIssueActivity"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_weight="1"
+            android:background="@color/GreenLightOpaque"
+            tools:layout_editor_absoluteX="35dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="50dp"
+            android:layout_height="57dp"
+            android:layout_weight="1"
+            android:padding="3dp"
+            app:srcCompat="@drawable/reportc"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            app:srcCompat="@drawable/reportf" />
+
+    </android.support.constraint.ConstraintLayout>
+
     <LinearLayout
         android:id="@+id/mainViewHolder"
         android:layout_width="match_parent"
@@ -14,8 +47,10 @@
         android:weightSum="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/capturedImageView"
@@ -23,12 +58,13 @@
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="8"
             android:contentDescription="imageView"
+            android:paddingTop="57dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +75,8 @@
             android:id="@+id/buttonViewHolder"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="0dp"
             android:layout_weight="2"
             android:orientation="horizontal"
             android:weightSum="2"
@@ -55,9 +93,11 @@
                 android:layout_weight="1"
                 android:background="@color/BlueDark"
                 android:backgroundTint="@color/GreenLight"
+                android:padding="10dp"
                 android:text="Camera"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
                 android:textColor="@color/color_icon"
-                android:textSize="@dimen/activity_horizontal_margin"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/capturedImageView"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -69,11 +109,14 @@
                 android:layout_alignParentEnd="true"
                 android:layout_weight="1"
                 android:background="@color/GreenDark"
+                android:padding="10dp"
                 android:text="Gallery"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
                 android:textColor="@color/color_icon"
-                android:textSize="@dimen/activity_horizontal_margin"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/capturedImageView" />
+
         </LinearLayout>
     </LinearLayout>
 
