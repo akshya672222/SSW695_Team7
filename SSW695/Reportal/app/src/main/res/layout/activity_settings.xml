@@ -8,12 +8,31 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/RedLightOpaque" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="50dp"
+        android:layout_height="57dp"
+        android:padding="3dp"
+        app:srcCompat="@drawable/settingsc" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        app:srcCompat="@drawable/settingsf" />
+
+    <TextView
         android:id="@+id/txtUserName"
         android:layout_width="206dp"
         android:layout_height="38dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="73dp"
         android:text="Change User name"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -39,7 +58,7 @@
         android:id="@+id/txtPassword"
         android:layout_width="201dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="16dp"
         android:text="Change Password"
         android:textColor="@android:color/background_dark"
@@ -65,17 +84,18 @@
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="62dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="52dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/side_nav_bar"
+        android:backgroundTint="@color/RedDark"
         android:text="Logout"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="@color/color_icon"
-        android:textSize="22sp"
-        android:textStyle="normal|italic"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ptPassword" />
 

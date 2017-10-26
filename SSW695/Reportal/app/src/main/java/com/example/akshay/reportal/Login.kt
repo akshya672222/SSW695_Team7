@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,18 +21,14 @@ import java.net.URL
 
 class Login : AppCompatActivity() {
     private var mAuthTask: UserLoginTask? = null
-    internal lateinit var userName: EditText
-    internal lateinit var mPasswordView:EditText
+    //internal lateinit var userName: EditText
+    //internal lateinit var mPasswordView:EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         logInBtn.setOnClickListener {
-
             attemptLogin()
-
-            val intent = Intent(this, Homepage::class.java)
-            startActivity(intent)
         }
         btnRegister.setOnClickListener {
             intent = Intent(this, Registration::class.java)
@@ -46,58 +44,68 @@ class Login : AppCompatActivity() {
             return
         }
         // Reset errors.
-        mPasswordView.setError(null)
-        // Store values at the time of the login attempt.
-        val email = userName.text.toString()
-        val password = mPasswordView.getText().toString()
 
+        // Store values at the time of the login attempt.
+        val email: String  = userName.text.toString()
+        val password: String = password.text.toString()
+        val alertDialog = AlertDialog.Builder(this ).create()
         var cancel = false
         var focusView: View? = null
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password))
-            focusView = mPasswordView
-            cancel = true
-        }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            userName.error = getString(R.string.error_field_required)
-            focusView = userName
-            cancel = true
+            alertDialog.setTitle("Error!")
+            alertDialog.setMessage("Email cannot be empty!")
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+            })
+            alertDialog.show()
         } else if (!isEmailValid(email)) {
-            userName.error = getString(R.string.error_invalid_email)
-            focusView = userName
-            cancel = true
+            alertDialog.setTitle("Error!")
+            alertDialog.setMessage("Please use Stevens email")
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+            })
+            alertDialog.show()
         }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView!!.requestFocus()
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-
-            UserLoginTask(email, password).execute(null as Void?)
+        // Check for a valid password, if the user entered one.
+        else if (TextUtils.isEmpty(password)){
+            alertDialog.setTitle("Error!")
+            alertDialog.setMessage("Password cannot be empty!")
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+            })
+            alertDialog.show()
+        }
+        else if(!isPasswordValid(password)) {
+            //password.setError(getString(R.string.error_invalid_password))
+            //focusView = password
+            alertDialog.setTitle("Error!")
+            alertDialog.setMessage("Password should have at least 8 characters!")
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+            })
+            alertDialog.show()
+        } else{
+            val intent = Intent(this, Homepage::class.java)
+            startActivity(intent)
         }
     }
-
     fun isPasswordValid(password: String): Boolean {
-        if (password.length > 4)
+        if (password.length >= 8)
             return true
         else
             return false
     }
 
     fun isEmailValid(email: String): Boolean {
-        if(email.length>50 || email.indexOf("stevens.edu")<0){
-            return false;
+
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if(email.indexOf("@stevens.edu")>0) {
+                return true;
+            }
         }
-        if(email.contains("@"))
-            return false;
-        return true
+        return false
     }
 
     inner class UserLoginTask internal constructor(private val mEmail: String, private val mPassword: String) : AsyncTask<Void, Void, Boolean>() {

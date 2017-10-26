@@ -43,6 +43,10 @@ class PostIssueActivity : AppCompatActivity() {
         buttonGallery.setOnClickListener {
             //checkPermissionGallery()
         }
+        adddescriptionbtn.setOnClickListener {
+            val intent = Intent(applicationContext, PreviewSubmission::class.java)
+            startActivity(intent)
+        }
     }
 /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
