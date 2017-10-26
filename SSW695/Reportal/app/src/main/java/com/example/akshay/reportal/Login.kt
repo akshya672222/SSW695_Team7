@@ -44,7 +44,11 @@ class Login : AppCompatActivity() {
             return
         }
         // Reset errors.
+<<<<<<< HEAD
         //mPasswordView.setError(null)
+=======
+        //mPasswordView.setError(" ")
+>>>>>>> 620edaa1bf907d25bcdd30c58e570c8021243c55
         // Store values at the time of the login attempt.
         val email: String  = userName.text.toString()
         val password: String = password.text.toString()
