@@ -1,6 +1,6 @@
 #This file contains all the route functions
 from flask import request, jsonify, session
-from MyApp import app, db
+from reportal import app, db
 from sqlalchemy import *
 
 # Instead of Users table, all other DB tables can also be imported as and when required
@@ -21,7 +21,7 @@ def login():
 		output    = 	[]
 
 		if inputdata:
-			output.append(dict(Msg = 'Correct credentials!!', UserID = inputdata.Uid, FirstName = inputdata.Fname, LastName = inputdata.Lname,Email = inputdata.Email))
+			output.append(dict(Msg = 'Correct credentials!!', FirstName = inputdata.Fname, LastName = inputdata.Lname,Email = inputdata.Email))
 		else:
 			output.append(dict(Msg = 'Incorrect credentials!!'))
 
@@ -37,7 +37,7 @@ def registerUser():
 		print 'TEST: Inside POST block for Registration.'
 		
 		# Below data is coming from Android JSON request
-		email 		= request.json['username']
+		email 		= request.json['email']
         password 	= request.json['password']
         firstname 	= request.json['firstname']
         lastname 	= request.json['lastname']
