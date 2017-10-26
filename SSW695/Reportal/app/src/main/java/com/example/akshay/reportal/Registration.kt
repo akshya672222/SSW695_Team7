@@ -26,23 +26,71 @@ class Registration : AppCompatActivity() {
             val email: String = emailid.text.toString()
             val password: String = password.text.toString()
             val confPassword: String = confirm_password.text.toString()
-            if (fname.length == 0 || lname.length == 0 || email.length == 0) {
+            if (fname.length == 0) {
                 alertDialog.setTitle("Error!")
-                alertDialog.setMessage("Fields cannot be empty!")
+                alertDialog.setMessage("First Name cannot be empty!")
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
                     dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
                 })
                 alertDialog.show()
             }
-            else if (password.length >= 8 || password.length == 0){
+            else if (lname.length == 0) {
                 alertDialog.setTitle("Error!")
-                alertDialog.setMessage("Password should be between 0-8 chareactar")
+                alertDialog.setMessage("Last Name cannot be empty!")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (email.length == 0) {
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Email ID cannot be empty!")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (!isEmailValid(email)) {
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Please use Stevens email")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (password.length == 0){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password cannot be empty!")
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
                     dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
                 })
                 alertDialog.show()
             }
-            else if (confPassword.length != password.length){
+            else if (password.length < 8){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password should have at least 8 characters")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (confPassword.length == 0){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password cannot be empty!")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (confPassword.length < 8){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Password should have at least 8 characters")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i -> Toast.makeText(applicationContext, "Please enter your password", Toast.LENGTH_LONG).show()
+                })
+                alertDialog.show()
+            }
+            else if (confPassword != password){
                 alertDialog.setTitle("Error!")
                 alertDialog.setMessage("Password not matched")
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
@@ -56,5 +104,15 @@ class Registration : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    fun isEmailValid(email: String): Boolean {
+
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if(email.indexOf("@stevens.edu")>0) {
+                return true;
+            }
+        }
+        return false
     }
 }

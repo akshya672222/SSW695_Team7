@@ -22,7 +22,7 @@
         android:layout_width="50dp"
         android:layout_height="57dp"
         android:padding="3dp"
-        app:srcCompat="@drawable/historyc"
+        app:srcCompat="@drawable/historyi"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="1dp" />
 
