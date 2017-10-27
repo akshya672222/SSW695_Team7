@@ -49,6 +49,8 @@ class Login : AppCompatActivity() {
         val email: String  = userName.text.toString()
         val password: String = password.text.toString()
         val alertDialog = AlertDialog.Builder(this ).create()
+        val checkEmail = "csakhile@stevens.edu"
+        val checkPassword = "12345678"
         var cancel = false
         var focusView: View? = null
 
@@ -86,7 +88,16 @@ class Login : AppCompatActivity() {
                 dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
             })
             alertDialog.show()
-        } else{
+        } else if(email != checkEmail || password != checkPassword){
+            alertDialog.setTitle("Error!")
+            alertDialog.setMessage("Credentials not a match")
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
+            })
+            alertDialog.show()
+        }
+        else{
+            Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, Homepage::class.java)
             startActivity(intent)
         }

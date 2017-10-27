@@ -18,6 +18,7 @@
     <color name="OrangeLightOpaque">#64f7a746</color>
     <color name="GreenLightOpaque">#6444b715</color>
     <color name="RedLightOpaque">#64f2464f</color>
+    <color name="GreyLightOpaque">#64878787</color>
     <item name="green" type="color">#FF99CC00</item>
 
 

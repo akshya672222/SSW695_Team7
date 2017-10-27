@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,18 +31,18 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                app:srcCompat="@android:drawable/btn_star_big_on"
-                android:contentDescription="@string/imageIssue" />
+                android:contentDescription="@string/imageIssue"
+                app:srcCompat="@android:drawable/btn_star_big_on" />
 
             <EditText
-                android:id="@+id/textViewDescription"
+                android:id="@+id/textViewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:ems="10"
-                android:hint="@string/description"
+                android:hint="Title"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -55,25 +55,47 @@
                 android:text="@string/app_name"
                 tools:text="@string/app_name" />
 
-            <ListView
-                android:id="@+id/listViewPriority"
+            <EditText
+                android:id="@+id/textViewDescription"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                tools:ignore="NestedScrolling">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:ems="10"
+                android:hint="Description"
+                android:inputType="textMultiLine" />
 
-            </ListView>
 
-            <ListView
-                android:id="@+id/listViewCategory"
+            <TextView
+                android:id="@+id/textView5"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                tools:ignore="NestedScrolling" />
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Category" />
+
+            <Spinner
+                android:id="@+id/category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:entries="@array/categoryItems"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Priority" />
+
+            <Spinner
+                android:id="@+id/priority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:entries="@array/priorityItems"
+                android:spinnerMode="dropdown" />
 
             <Button
                 android:id="@+id/buttonPost"

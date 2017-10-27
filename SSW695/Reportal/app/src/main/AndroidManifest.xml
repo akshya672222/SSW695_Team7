@@ -31,6 +31,7 @@
         <activity android:name=".ForgotPassword" />
         <activity android:name=".Registration" />
         <activity android:name=".Homepage" />
+        <activity android:name=".About" />
 
         <meta-data
             android:name="preloaded_fonts"
