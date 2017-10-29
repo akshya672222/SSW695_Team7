@@ -61,3 +61,32 @@ def registerUser():
         	output.append(dict(Msg = 'User not registered, please try again.'))
 
 	return jsonify({'result' : output})
+
+
+# Priority Route
+@app.route('/Priority', methods=['POST', 'PUT'])
+def addPriority():
+	print 'TEST: Inside Priority Route.'
+	error = None
+	if request.method == 'POST':
+		print 'TEST: Inside POST block for Priority.'
+
+		# Below data is coming from Admin portal JSON request
+		#priority_id       = 	request.json['priority_id'] # Auto-Increment field in DB
+		priority_name     = 	request.json['priority_name']
+		priority_status   = 	request.json['priority_status']
+		output            = 	[]
+		
+		checkPriority     =     Users.query.filter_by(priority_name = priority_name).first()
+
+		if checkPriority && priority_name = checkPriority.priority_name:
+			output.append(dict(Msg = 'Priority already present.'))
+		elif priority_name && priority_status:
+			new_priority = Priority(priority_name = priority_name, priority_status = priority_status)
+			db.session.add(new_priority)
+			db.session.commit()
+			output.append(dict(Msg = 'Priority added successfully.'))
+		else:
+			output.append(dict(Msg = 'Priority not added, please try again.'))
+
+	return jsonify({'result' : output})
