@@ -1,6 +1,7 @@
 package com.example.akshay.reportal
 
 import android.Manifest
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
@@ -8,20 +9,25 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_post_issue.*
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-
-
 import android.util.Log
 import android.widget.Toast
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.android.synthetic.main.activity_post_issue.*
+import android.content.pm.PackageInfo
+import android.graphics.drawable.Drawable
+
 
 class PostIssueActivity : AppCompatActivity() {
 
+    val CAMERA_REQUEST_CODE =0
+    val MY_PERMISSIONS_REQUEST_CAMERA =0
     val MY_REQUEST_CAMERA = 10
     val MY_REQUEST_WRITE_CAMERA = 11
     val CAPTURE_CAMERA = 12
@@ -34,10 +40,18 @@ class PostIssueActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_post_issue)
  //       val intent = Intent(this, MainActivity::class.java)
         buttonCamera.setOnClickListener {
            // checkPermissionCamera()
+
+            val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+            if(callCameraIntent.resolveActivity(packageManager) != null){
+                startActivityForResult(callCameraIntent,CAMERA_REQUEST_CODE)
+            }
         }
  //       val intentToHistory = Intent(this, historyActivity::class.java)
         buttonGallery.setOnClickListener {
@@ -48,6 +62,44 @@ class PostIssueActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when(requestCode){
+            CAMERA_REQUEST_CODE -> {
+                if(requestCode == Activity.RESULT_OK && data != null){
+
+                    capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
+                    capturedImageView.setImageDrawable(data.extras.get("data") as Drawable)
+                }
+            }
+            else -> {
+                Toast.makeText(this, "Unrecognized request code",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun hasPermissionInManifest(context: Context, permissionName: String): Boolean {
+        val packageName = context.packageName
+        try {
+            val packageInfo = context.packageManager
+                    .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+            val declaredPermisisons = packageInfo.requestedPermissions
+            if (declaredPermisisons != null && declaredPermisisons.size > 0) {
+                for (p in declaredPermisisons) {
+                    if (p == permissionName) {
+                        return true
+                    }
+                }
+            }
+        } catch (e: Exception) {
+
+        }
+
+        return false
+    }
+
 /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
