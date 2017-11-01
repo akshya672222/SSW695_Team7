@@ -1,3 +1,4 @@
+
 #This file contains all the route functions
 from flask import request, jsonify, session
 from reportal import app, db
@@ -7,7 +8,7 @@ from sqlalchemy import *
 from models import Users
 
 # Login Route
-@app.route('/Login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
 	print 'TEST: Inside Login Route.'
 	error = None
@@ -21,7 +22,7 @@ def login():
 		output    = 	[]
 
 		if inputdata:
-			output.append(dict(Msg = 'Correct credentials!!', FirstName = inputdata.Fname, LastName = inputdata.Lname,Email = inputdata.Email))
+			output.append(dict(Msg = 'Correct credentials!!', UserID = inputdata.UID, FirstName = inputdata.Fname, LastName = inputdata.Lname,Email = inputdata.Email))
 		else:
 			output.append(dict(Msg = 'Incorrect credentials!!'))
 
@@ -29,7 +30,7 @@ def login():
 
 
 # Register Route
-@app.route('/Registration', methods = ['POST'])
+@app.route('/api/registration', methods = ['POST'])
 def registerUser():
 	print 'TEST: Inside Registration Route.'
 	error = None
@@ -41,6 +42,9 @@ def registerUser():
         password 	= request.json['password']
         firstname 	= request.json['firstname']
         lastname 	= request.json['lastname']
+        user_type 	= request.json['type']#mobile app will send 1 i.e. end user
+        user_department 	= request.json['department']#mobile app will send -1 
+        status 		= request.json['status']#mobile app will send 0 i.e. deactivated
         
         output = []
 
@@ -53,7 +57,7 @@ def registerUser():
         	if email == checkUser.Email:
         		output.append(dict(Msg = 'User already registered.'))
         elif email and password and firstname and lastname: #IFF all the mandatory values are present then register the candidate
-        	new_user = Users(Fname = firstname, Lname = lastname, Email = email, Password = password)
+        	new_user = Users(Fname = firstname, Lname = lastname, Email = email, Password = password, user_type = user_type, Department = user_department, Status = status)
         	db.session.add(new_user)
         	db.session.commit()
         	output.append(dict(Msg = 'User successfully registered.', Ufname = firstname))
@@ -61,7 +65,6 @@ def registerUser():
         	output.append(dict(Msg = 'User not registered, please try again.'))
 
 	return jsonify({'result' : output})
-
 
 # Priority Route
 @app.route('/Priority', methods=['POST', 'PUT'])
