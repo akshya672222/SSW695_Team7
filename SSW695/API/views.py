@@ -4,6 +4,7 @@ from flask import request, jsonify, session
 from reportal import app, db
 from sqlalchemy import *
 
+
 # Instead of Users table, all other DB tables can also be imported as and when required
 from models import Users
 
@@ -30,7 +31,7 @@ def login():
 
 
 # Register Route
-@app.route('/api/registration', methods = ['POST'])
+@app.route('/api/register', methods = ['POST'])
 def registerUser():
 	print 'TEST: Inside Registration Route.'
 	error = None
@@ -43,8 +44,9 @@ def registerUser():
         firstname 	= request.json['firstname']
         lastname 	= request.json['lastname']
         user_type 	= request.json['type']#mobile app will send 1 i.e. end user
-        user_department 	= request.json['department']#mobile app will send -1 
+        token 		= request.json['token']#mobile app will send -1 
         status 		= request.json['status']#mobile app will send 0 i.e. deactivated
+        category 	= request.json['category']#mobile app will send category of end user and CMS will send accordingly
         
         output = []
 
@@ -57,7 +59,7 @@ def registerUser():
         	if email == checkUser.Email:
         		output.append(dict(Msg = 'User already registered.'))
         elif email and password and firstname and lastname: #IFF all the mandatory values are present then register the candidate
-        	new_user = Users(Fname = firstname, Lname = lastname, Email = email, Password = password, user_type = user_type, Department = user_department, Status = status)
+        	new_user = Users(Fname = firstname, Lname = lastname, Email = email, Password = password, user_type = user_type, Token = token, Status = status, Category = category)
         	db.session.add(new_user)
         	db.session.commit()
         	output.append(dict(Msg = 'User successfully registered.', Ufname = firstname))
@@ -66,30 +68,3 @@ def registerUser():
 
 	return jsonify({'result' : output})
 
-# Priority Route
-@app.route('/Priority', methods=['POST', 'PUT'])
-def addPriority():
-	print 'TEST: Inside Priority Route.'
-	error = None
-	if request.method == 'POST':
-		print 'TEST: Inside POST block for Priority.'
-
-		# Below data is coming from Admin portal JSON request
-		#priority_id       = 	request.json['priority_id'] # Auto-Increment field in DB
-		priority_name     = 	request.json['priority_name']
-		priority_status   = 	request.json['priority_status']
-		output            = 	[]
-		
-		checkPriority     =     Users.query.filter_by(priority_name = priority_name).first()
-
-		if checkPriority && priority_name = checkPriority.priority_name:
-			output.append(dict(Msg = 'Priority already present.'))
-		elif priority_name && priority_status:
-			new_priority = Priority(priority_name = priority_name, priority_status = priority_status)
-			db.session.add(new_priority)
-			db.session.commit()
-			output.append(dict(Msg = 'Priority added successfully.'))
-		else:
-			output.append(dict(Msg = 'Priority not added, please try again.'))
-
-	return jsonify({'result' : output})
