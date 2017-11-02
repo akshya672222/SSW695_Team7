@@ -1,0 +1,63 @@
+{% extends "blank-page.html" %}
+
+{% set active_page = "maintenance" %}
+
+{% block title %} Maintenance {% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+                Maintenance
+            <small>list of all maintenance users</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+            </li>
+            <li class="active">
+                <i class="fa fa-file"></i>  Maintenance
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class = "active">
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{row["MID"]}}</td>
+                        <td>{{row["Mfname"]}}</td>
+                        <td>{{row["Mlname"]}}</td>
+                        <td>{{row["Memail"]}}</td>
+                        <td>**************</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

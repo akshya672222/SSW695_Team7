@@ -1,0 +1,99 @@
+{% extends "blank-page.html" %}
+
+{% set active_page = "dashboard" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Dashboard
+            <small> Summary</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+            </li>
+
+        </ol>
+    </div>
+</div>
+
+  <div class="panel panel-default bootcards-summary">
+
+    <div class="panel-heading">
+      <h3 class="panel-title">Summary</h3>
+    </div>
+
+
+    <div class="panel-body">
+      </br></br></br></br></br>
+      <div class="row">
+
+        <div class="col-xs-1">
+        </div>
+
+        <div class="col-xs-2">
+          <a class="bootcards-summary-item" href="/users/">
+            <center>
+            <i class="fa fa-5x fa-users"></i>
+            <h3>Users</h3>
+          </center>
+          </a>
+        </div>
+
+
+
+        <div class="col-xs-2">
+          <a class="bootcards-summary-item" href="/admin/">
+            <center>
+            <i class="fa fa-5x fa-gears"></i>
+            <h3>Admins</h3>
+          </center>
+          </a>
+        </div>
+
+        <div class="col-xs-2">
+          <a class="bootcards-summary-item" href="/issues/">
+            <center>
+            <i class="fa fa-5x fa-exclamation-circle"></i>
+            <h3>Issues</h3>
+          </center>
+          </a>
+        </div>
+
+        <div class="col-xs-2">
+          <a class="bootcards-summary-item" href="/category/">
+            <center>
+            <i class="fa fa-5x fa-list"></i>
+            <h3>Categories</h3>
+          </center>
+          </a>
+        </div>
+
+        <div class="col-xs-2">
+          <a class="bootcards-summary-item" href="/maintenance/">
+            <center>
+            <i class="fa fa-5x fa-wrench"></i>
+            <h3>Maintenance</h3>
+          </center>
+          </a>
+        </div>
+
+      </div>
+      </br></br></br></br></br>
+    </div>
+
+    <div class="panel-footer">
+      <!-- <small>Built with Bootcards - Summary Card</small> -->
+    </div>
+
+  </div>
+
+{% endblock %}
+
+
+
+

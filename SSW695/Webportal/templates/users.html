@@ -1,0 +1,124 @@
+{% extends "blank-page.html" %}
+
+{% set active_page = "users" %}
+
+{% block title %} Users {% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Users
+            <small> list of all users of Reportal</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+            </li>
+            <li class="active">
+                <i class="fa fa-file"></i>  Users
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+    <!-- Button trigger modal -->
+    <div class="col-lg-12" align="right">
+        <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
+        <i class="fa fa-plus"></i>  Add User
+        </button>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Add User</h4>
+          </div>
+          <div class="modal-body">
+                <form role="form" method="post">
+                    <fieldset>
+
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input class="form-control" placeholder="First Name" name="fname" type="text" value="{{request.form.fname}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" placeholder="Last Name" name="lname" type="text" value="{{request.form.lname}}">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" placeholder="E-mail" name="email" type="email" value="{{request.form.email}}" >
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input class="form-control" placeholder="Password" name="password" type="password" value="{{request.form.password}}">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input class="form-control" placeholder="Re-enter Password" name="password" type="password" value="{{request.form.password}}">
+                        </div>
+                        <div class="form-group">
+                            <label>CWID</label>
+                            <input class="form-control" placeholder="CWID" name="cwid" type="text" value="{{request.form.cwid}}">
+                        </div>
+
+                    </fieldset>
+                </form>
+          </div>
+            <div class="modal-footer">
+                <button type="submit"  class="btn btn-primary btn-default btn-block" value="add">Add</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+    </br>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class = "active">
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{row["UID"]}}</td>
+                        <td>{{row["Ufname"]}}</td>
+                        <td>{{row["Ulname"]}}</td>
+                        <td>{{row["Uemail"]}}</td>
+                        <td>**************</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
