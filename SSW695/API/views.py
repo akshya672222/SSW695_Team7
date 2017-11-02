@@ -1,4 +1,3 @@
-
 #This file contains all the route functions
 from flask import request, jsonify, session
 from reportal import app, db
@@ -65,6 +64,51 @@ def registerUser():
         	output.append(dict(Msg = 'User successfully registered.', Ufname = firstname))
         else:
         	output.append(dict(Msg = 'User not registered, please try again.'))
+
+	return jsonify({'result' : output})
+
+# Update user Route
+@app.route('/api/update_user_settings', methods = ['POST'])
+def update_user_settings():
+	print 'TEST: Inside update_user_settings Route.'
+	error = None
+	if request.method == 'POST':
+		
+		# Below data is coming from Android JSON request
+		email 		= request.json['email']
+        password 	= request.json['password']
+        firstname 	= request.json['firstname']
+        lastname 	= request.json['lastname']
+
+        output = []
+
+        # Check if user details are already present in the database
+        checkUser = Users.query.filter_by(Email = email).first()
+                
+        print email,password
+        if checkUser:
+        	if email == checkUser.Email:
+        		if email and password and firstname and lastname: #IFF all the mandatory values are present then register the candidate
+        			 checkUser.Email = email
+        			 checkUser.Password = password
+        			 checkUser.Fname = firstname
+        			 checkUser.Lname = lastname
+
+        			 if 'type' in request.json and 'status' in request.json and 'category' in request.json: 
+        				user_type 	= request.json['type']
+        				status 		= request.json['status']
+        				category 	= request.json['category']
+        				checkUser.user_type = user_type
+        				checkUser.Status = status
+        				checkUser.Category = category
+        			 else:
+        				print "Update Request is from Mobile"
+        			 #if user_type and status and category: #this will be true for API call from CMS/web
+        			    
+        			 db.session.commit()
+        			 output.append(dict(Msg = 'User successfully updated.', Fname = firstname))
+        else:
+        	output.append(dict(Msg = 'User not found.'))
 
 	return jsonify({'result' : output})
 
