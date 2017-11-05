@@ -5,7 +5,7 @@ from sqlalchemy import *
 
 
 # Instead of Users table, all other DB tables can also be imported as and when required
-from models import Users
+from models import Users, Priority
 
 # Login Route
 @app.route('/api/login', methods=['POST'])
@@ -67,6 +67,51 @@ def registerUser():
 
 	return jsonify({'result' : output})
 
+
+# Add / Update Priority route
+@app.route('/api/priority', methods = ['POST', 'PUT'])
+def add_update_Priority():
+
+        print 'TEST: Inside Priority Route.'
+        error = None
+        if request.method == 'POST':
+                print 'TEST: Inside POST block for Add Priority.'
+                priority_name = request.json['priority_name']
+                priority_status = request.json['priority_status']
+
+                output = []
+
+                checkPriority = Priority.query.filter_by(Priority_name = priority_name).first()
+
+                if checkPriority and priority_name.Priority_name:
+                        output.append(dict(Msg = 'Priority already present.'))
+                elif priority_name and priority_status:
+                        new_priority = Priority(Priority_name = priority_name, Priority_status = priority_status)
+                        db.session.add(new_priority)
+                        db.session.commit()
+                        output.append(dict(Msg = 'Priority added successfully.'))
+                else:
+                        output.append(dict(Msg = 'Priority not added, please try again.'))
+
+        if request.method == 'PUT':
+                print 'TEST: Inside PUT block for Update Priority.'
+                priority_id = request.json['priority_id']
+                priority_name = request.json['priority_name']
+                priority_status = request.json['priority_status']
+
+                output = []
+                updateThisPriority = Priority.query.filter_by(Priority_id = priority_id).first()
+
+                if updateThisPriority:
+                        updateThisPriority.Priority_name = priority_name
+                        updateThisPriority.Priority_status = priority_status
+                        db.session.commit()
+                        output.append(dict(Msg = 'Priority updated successfully.'))
+                else:
+                     output.append(dict(Msg = 'Priority not present.'))
+
+        return jsonify({'result' : output})
+
 # Update user Route
 @app.route('/api/update_user_settings', methods = ['POST'])
 def update_user_settings():
@@ -80,7 +125,7 @@ def update_user_settings():
         firstname 	= request.json['firstname']
         lastname 	= request.json['lastname']
 
-        output = []
+        #output = []
 
         # Check if user details are already present in the database
         checkUser = Users.query.filter_by(Email = email).first()
@@ -111,4 +156,3 @@ def update_user_settings():
         	output.append(dict(Msg = 'User not found.'))
 
 	return jsonify({'result' : output})
-

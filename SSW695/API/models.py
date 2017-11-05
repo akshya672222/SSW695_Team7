@@ -13,3 +13,10 @@ class Users(db.Model):
 	Token   =  db.Column('user_token', db.Unicode)
 	user_type	 =  db.Column('user_type', db.Unicode)
 	Category	 =  db.Column('user_category', db.Unicode)
+
+class Priority(db.Model):
+	__tablename__ = 'Priority'
+
+	Priority_id 		= db.Column('priority_id', db.Integer, primary_key = True)
+	Priority_name 		= db.Column('priority_name', db.Unicode)
+	Priority_status 	= db.Column('priority_status', db.Unicode)
