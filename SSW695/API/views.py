@@ -2,7 +2,7 @@
 from flask import request, jsonify, session
 from reportal import app, db
 from sqlalchemy import *
-
+import sys, os
 
 # Instead of Users table, all other DB tables can also be imported as and when required
 from models import Users, Priority, Category
@@ -90,7 +90,9 @@ def add_update_Priority():
                         db.session.add(new_priority)
                         db.session.commit()
                         output.append(dict(Msg = 'Priority added successfully.'))
+                        status_code = 200
                 else:
+                        status_code = 400
                         output.append(dict(Msg = 'Priority not added, please try again.'))
 
         if request.method == 'PUT':
@@ -107,10 +109,13 @@ def add_update_Priority():
                         updateThisPriority.Priority_status = priority_status
                         db.session.commit()
                         output.append(dict(Msg = 'Priority updated successfully.'))
-                else:
-                     output.append(dict(Msg = 'Priority not present.'))
+                        status_code = 200
 
-        return jsonify({'result' : output})
+                else:
+                        status_code = 400
+                        output.append(dict(Msg = 'Priority not present.'))
+
+        return jsonify({'result' : output, 'status_code':status_code })
 
 # Add / Update Category route
 @app.route('/api/category', methods = ['POST', 'PUT'])
@@ -120,8 +125,8 @@ def add_update_Category():
         error = None
         if request.method == 'POST':
                 print 'TEST: Inside POST block for Add Category.'
-                priority_name = request.json['category_name']
-                priority_status = request.json['category_status']
+                category_name = request.json['category_name']
+                category_status = request.json['category_status']
 
                 output = []
 
@@ -134,7 +139,9 @@ def add_update_Category():
                         db.session.add(new_category)
                         db.session.commit()
                         output.append(dict(Msg = 'Category added successfully.'))
+                        status_code = 200
                 else:
+                        status_code = 400
                         output.append(dict(Msg = 'Category not added, please try again.'))
 
         if request.method == 'PUT':
@@ -151,11 +158,75 @@ def add_update_Category():
                         updateThisCategory.Category_status = category_status
                         db.session.commit()
                         output.append(dict(Msg = 'Category updated successfully.'))
+                        status_code = 200
                 else:
-                     output.append(dict(Msg = 'Category not present.'))
+                        output.append(dict(Msg = 'Category not present.'))
+                        status_code = 400
+
+        return jsonify({'result' : output, 'status_code' : status_code})
+
+'''
+# Add Issue / Post Issue
+@app.route('/api/post_issue', methods = ['POST'])
+def post_issue():
+        print 'TEST: Inside post_issue route.'
+        error = None
+
+        if request.method == 'POST':
+
+                # JSON data from Android app
+                user_id                 = request.json['user_id']
+                issue_lat               = request.json['issue_lat']
+                issue_long              = request.json['issue_lon']
+                issue_time              = request.json['issue_time']
+                issue_description       = request.json['issue_description']
+                issue_category_id       = request.json['issue_category_id']
+                issue_priority          = request.json['issue_priority']
+                issue_picture_name      = request.json['issue_picture_name']
+                issue_picpath           = sys.check_output('cd Users/')
+                #current_path            = sys.chec
+                #issue_picture           = request.form.data['issue_picture']
+
+                output = []
+
+                checkUser = Users.query.filter_by(Email = email).first()
+
+                if checkUser:
+                        new_issue = Issues(user_id = user_id, issue_lat = issue_lat, issue_long = issue_long, issue_time = issue_time, issue_description = issue_description, issue_category_id = issue_category_id, issue_priority = issue_priority, )
+
 
         return jsonify({'result' : output})
+'''
 
+'''
+@app.route('/api/check')
+def check():
+        cwd = os.getcwd()
+        print cwd
+        directory = cwd + '/Users/'
+        if not os.path.exists(directory):
+                os.makedirs(directory)
+                os.chdir(directory)
+                print cwd
+                directory = cwd + '/AK/'
+
+                if not os.path.exists(directory):
+                        os.makedirs(directory)
+                        os.chdir(directory)
+                        print cwd
+                else:
+                        return cwd
+        else:
+
+                if not os.path.exists(directory):
+                        os.makedirs(directory)
+                        os.chdir(directory)
+                        print cwd
+                else:
+                        return cwd
+
+        return "Hello"
+'''
 
 # Update user Route
 @app.route('/api/update_user_settings', methods = ['POST'])
