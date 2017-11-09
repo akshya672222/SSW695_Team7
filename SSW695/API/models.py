@@ -19,4 +19,11 @@ class Priority(db.Model):
 
 	Priority_id 		= db.Column('priority_id', db.Integer, primary_key = True)
 	Priority_name 		= db.Column('priority_name', db.Unicode)
-	Priority_status 	= db.Column('priority_status', db.Unicode)
+	Priority_status 	= db.Column('priority_status', db.Integer)
+
+class Category(db.Model):
+	__tablename__ = 'Category'
+
+	Category_id 			= db.Column('category_id', db.Integer, primary_key = True)
+	Category_name 			= db.Column('category_name', db.Unicode)
+	Category_status 		= db.Column('category_status', db.Integer)

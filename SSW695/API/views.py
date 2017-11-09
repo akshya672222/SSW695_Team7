@@ -5,7 +5,7 @@ from sqlalchemy import *
 
 
 # Instead of Users table, all other DB tables can also be imported as and when required
-from models import Users, Priority
+from models import Users, Priority, Category
 
 # Login Route
 @app.route('/api/login', methods=['POST'])
@@ -83,7 +83,7 @@ def add_update_Priority():
 
                 checkPriority = Priority.query.filter_by(Priority_name = priority_name).first()
 
-                if checkPriority and priority_name.Priority_name:
+                if checkPriority and checkPriority.Priority_name:
                         output.append(dict(Msg = 'Priority already present.'))
                 elif priority_name and priority_status:
                         new_priority = Priority(Priority_name = priority_name, Priority_status = priority_status)
@@ -111,6 +111,51 @@ def add_update_Priority():
                      output.append(dict(Msg = 'Priority not present.'))
 
         return jsonify({'result' : output})
+
+# Add / Update Category route
+@app.route('/api/category', methods = ['POST', 'PUT'])
+def add_update_Category():
+
+        print 'TEST: Inside Category Route.'
+        error = None
+        if request.method == 'POST':
+                print 'TEST: Inside POST block for Add Category.'
+                priority_name = request.json['category_name']
+                priority_status = request.json['category_status']
+
+                output = []
+
+                checkCategory = Category.query.filter_by(Category_name = category_name).first()
+
+                if checkCategory and checkPriority.Category_name:
+                        output.append(dict(Msg = 'Category already present.'))
+                elif category_name and category_status:
+                        new_category = Category(Category_name = category_name, Category_status = category_status)
+                        db.session.add(new_category)
+                        db.session.commit()
+                        output.append(dict(Msg = 'Category added successfully.'))
+                else:
+                        output.append(dict(Msg = 'Category not added, please try again.'))
+
+        if request.method == 'PUT':
+                print 'TEST: Inside PUT block for Update Category.'
+                category_id = request.json['category_id']
+                category_name = request.json['category_name']
+                category_status = request.json['category_status']
+
+                output = []
+                updateThisCategory = Category.query.filter_by(Category_id = category_id).first()
+
+                if updateThisCategory:
+                        updateThisCategory.Category_name = category_name
+                        updateThisCategory.Category_status = category_status
+                        db.session.commit()
+                        output.append(dict(Msg = 'Category updated successfully.'))
+                else:
+                     output.append(dict(Msg = 'Category not present.'))
+
+        return jsonify({'result' : output})
+
 
 # Update user Route
 @app.route('/api/update_user_settings', methods = ['POST'])
