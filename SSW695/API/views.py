@@ -165,7 +165,7 @@ def add_update_Category():
 
         return jsonify({'result' : output, 'status_code' : status_code})
 
-'''
+
 # Add Issue / Post Issue
 @app.route('/api/post_issue', methods = ['POST'])
 def post_issue():
@@ -183,20 +183,19 @@ def post_issue():
                 issue_category_id       = request.json['issue_category_id']
                 issue_priority          = request.json['issue_priority']
                 issue_picture_name      = request.json['issue_picture_name']
-                issue_picpath           = sys.check_output('cd Users/')
                 #current_path            = sys.chec
                 #issue_picture           = request.form.data['issue_picture']
 
                 output = []
 
-                checkUser = Users.query.filter_by(Email = email).first()
+                
 
                 if checkUser:
                         new_issue = Issues(user_id = user_id, issue_lat = issue_lat, issue_long = issue_long, issue_time = issue_time, issue_description = issue_description, issue_category_id = issue_category_id, issue_priority = issue_priority, )
 
 
         return jsonify({'result' : output})
-'''
+
 
 '''
 @app.route('/api/check')

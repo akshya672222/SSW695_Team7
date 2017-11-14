@@ -27,3 +27,11 @@ class Category(db.Model):
 	Category_id 			= db.Column('category_id', db.Integer, primary_key = True)
 	Category_name 			= db.Column('category_name', db.Unicode)
 	Category_status 		= db.Column('category_status', db.Integer)
+
+class Issues(db.Model):
+	__tablename__ = 'Issues'
+
+	Issue_id		= db.Column('issue_id', db.Integer, primary_key = True)
+	Iuid 			= db.Column('user_id', db.Integer)
+	Icategory_id	= db.Column('category_id', db.Integer)
+	
