@@ -7,11 +7,18 @@ import time
 import datetime
 import os
 import gc
+import json
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
+
+api_url = 'http://ec2-52-37-224-72.us-west-2.compute.amazonaws.com/api/'
 
 def connection():
 	try:
@@ -49,28 +56,29 @@ def login():
     try:
         con, cur = connection()
         if request.method == "POST":
-            print('email: ', request.form['email'], ' password: ', request.form['password'])
+        	#Check for super admin
             if request.form['email'] == 'admin@admin.com' and request.form['password'] == 'password':
                 session['logged_in'] = True
                 session['name'] = 'ADMIN'
                 return redirect(url_for('dashboard'))
             
-            data = cur.execute("SELECT * FROM Users WHERE user_email = '%s'" % request.form['email'])
-
-            row = cur.fetchall()
-
-            if sha256_crypt.verify(request.form['password'], row[0][2]) :
-                session['logged_in'] = True
-                session['name'] = row[0][3]
-
-                #flash("You are now logged in")
-                return redirect(url_for("dashboard"))
-
-            else:
-                error = "Invalid credentials, try again."
-
+            #Check for admin other than super admin
+            url_get_people_list = api_url + 'login'
+            payload = {
+                'email': request.form['email'],
+                'password': request.form['password'] #sha256_crypt.hash(request.form['password'])
+            }
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                                      'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            if response_json['status_code'] == 200:
+            	session['logged_in'] = True
+            	session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
+            	return redirect(url_for("dashboard"))
+            error = str(response_json['message'])
         return render_template("login.html", error=error)
-
     except Exception as e:
         #flash(e)
         error = "Invalid credentials, try again."
@@ -106,9 +114,21 @@ def issues():
 @app.route('/admin/',methods=["GET"])
 @login_required
 def admin():
+    #Fetch admin from database -> Fetch admin list from server
     con, cur = connection()
-    cur.execute("select * from Users")
+    cur.execute("select * from Users where user_type = 3")
     rows = cur.fetchall()
+
+    page_number = 1
+    url_get_people_list = api_url + 'get_user_list/' + str(page_number)
+    url_req = urllib2.Request(url_get_people_list, headers={
+                                      'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+    	print(response_json['result'])
+    else:
+    	print(response_json['message'])
     return render_template("admin.html", rows = rows)  
 
 @app.route('/addAdmin/',methods=["POST"])
@@ -117,12 +137,31 @@ def addAdmin():
     con, cur = connection()
     try:
         if request.method == "POST":
-            cur.execute("INSERT INTO Admin (Aemail, Apassword, Afname,Alname) VALUES (?,?,?,?)", (request.form['email'],request.form['password'],request.form['fname'],request.form['lname']))
-            con.commit()
-            flash("Added Successfuly!")
+            url_get_people_list = api_url + 'register'
+            payload = {
+                'email': request.form['email'],
+                'password': request.form['password'], #sha256_crypt.hash(request.form['password']),
+                'firstname': request.form['fname'],
+                'lastname': request.form['lname'],
+                'category': 0,
+                'type': 3,
+                'status':0,
+                'token':0
+            }
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = 'Admin added successfuly!'
+            else:
+            	message = response_json['message']
+            flash(message)
             return redirect(url_for('admin'))
-
     except Exception as e:
+        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('admin'))
     
