@@ -33,5 +33,12 @@ class Issues(db.Model):
 
 	Issue_id		= db.Column('issue_id', db.Integer, primary_key = True)
 	Iuid 			= db.Column('user_id', db.Integer)
-	Icategory_id	= db.Column('category_id', db.Integer)
-	
+	Icategory_id	= db.Column('issue_category_id', db.Integer)
+	Istatus_id		= db.Column('status_id', db.Integer)
+	Ipicpath		= db.Column('issue_picpath', db.Unicode)
+	Ipriority		= db.Column('issue_priority_id', db.Integer)
+	Idescription	= db.Column('issue_description', db.Integer)
+	Itime			= db.Column('issue_time', db.Unicode)
+	Ilat			= db.Column('issue_lat', db.Float)
+	Ilon			= db.Column('issue_lat', db.Float)
+	IassignedTo		= db.Column('issue_assignedTo', db.Integer)

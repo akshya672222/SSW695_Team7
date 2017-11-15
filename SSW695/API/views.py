@@ -3,9 +3,12 @@ from flask import request, jsonify, session
 from reportal import app, db
 from sqlalchemy import *
 import sys, os
+from werkzeug.utils import secure_filename
 
 # Instead of Users table, all other DB tables can also be imported as and when required
 from models import Users, Priority, Category
+
+ALLOWED_EXTENSIONS = set(['jpg','jpeg','png'])
 
 # Login Route
 @app.route('/api/login', methods=['POST'])
@@ -166,6 +169,10 @@ def add_update_Category():
         return jsonify({'result' : output, 'status_code' : status_code})
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 # Add Issue / Post Issue
 @app.route('/api/post_issue', methods = ['POST'])
 def post_issue():
@@ -176,25 +183,43 @@ def post_issue():
 
                 # JSON data from Android app
                 user_id                 = request.json['user_id']
+                #folder_location         = app.config['UPLOAD_FOLDER'] + '/' + str(user_id)
                 issue_lat               = request.json['issue_lat']
                 issue_long              = request.json['issue_lon']
                 issue_time              = request.json['issue_time']
                 issue_description       = request.json['issue_description']
                 issue_category_id       = request.json['issue_category_id']
                 issue_priority          = request.json['issue_priority']
-                issue_picture_name      = request.json['issue_picture_name']
-                #current_path            = sys.chec
-                #issue_picture           = request.form.data['issue_picture']
 
                 output = []
 
-                
+                if 'file' not in request.files:
+                        output = 'No file part'
+                image = request.files['file']
 
-                if checkUser:
-                        new_issue = Issues(user_id = user_id, issue_lat = issue_lat, issue_long = issue_long, issue_time = issue_time, issue_description = issue_description, issue_category_id = issue_category_id, issue_priority = issue_priority, )
+                # Check if the user has selected any image
+                if image.filename == '':
+                        output = 'No image selected'
+
+                if image and allowed_file(image.filename.lower()):
+                        filename = secure_filename(image.filename)
+                        issue_picture_name = image.filename
+
+                        user_data = Users.query.filter_by(UID = user_id).first()
+                        user_name_id = "".join(user_data.Fname + str(user_data.UID))
+                        folder_location = app.config['UPLOAD_FOLDER'] + '/' + user_name_id
+                        issue_picpath = folder_location
+
+                        image.save(os.path.join(folder_location, filename)) 
+                        new_issue = Issues(Iuid = user_id, Ilat = issue_lat, Ilon = issue_long, Itime = issue_time, Idescription = issue_description, Icategory_id = issue_category_id, Ipriority = issue_priority, Ipicpath = issue_picpath)
+                        db.session.add(new_issue)
+                        db.session.commit()
+                        output = 'Issue posted successfully.'
+                        status_code = 200
+                        
 
 
-        return jsonify({'result' : output})
+        return jsonify({'result' : output, 'status_code' : status_code})
 
 
 '''
