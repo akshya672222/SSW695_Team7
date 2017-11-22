@@ -6,28 +6,159 @@
 
 {% block body %}
 
+<script type="text/javascript">
+    function form_submit() {
+      document.getElementById("add_form").submit();
+     }
+    
+    function form_submit() {
+      document.getElementById("update_form").submit();
+     }
+
+     $(document).on("click", ".open-AddBookDialog", function () {
+     var Uid = $(this).data('id');
+     var Ufname = $(this).data('fname');
+     var Ulname = $(this).data('lname');
+     var Uemail= $(this).data('email');
+
+     $(".modal-body #UID").val( Uid );
+     $(".modal-body #Ufname").val( Ufname );
+     $(".modal-body #Ulname").val( Ulname );
+     $(".modal-body #Uemail").val( Uemail );
+});
+</script>
+
+
+
+
+
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">
-                Maintenance
-            <small>list of all maintenance users</small>
+            Maintenance
+            <small> list of all maintenance of Reportal</small>
         </h1>
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
             </li>
             <li class="active">
-                <i class="fa fa-file"></i>  Maintenance
+                <i class="fa fa-file"></i>  Users
             </li>
         </ol>
     </div>
 </div>
 
 
+<div class="row">
+    <div class="col-sm-8" align="left">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert" >
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{message}}
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+    </div>
+
+    <div class="col-sm-4" align="right">
+        <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
+            <i class="fa fa-plus"></i>  Add Maintenance
+            </button>
+    </div>
+
+
+<!-- Modal Add Table -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Add Maintenance</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/addUser/" id="add_form">
+                    <fieldset>
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input class="form-control" placeholder="First Name" name="fname" type="text" value="{{request.form.fname}}" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" placeholder="Last Name" name="lname" type="text" value="{{request.form.lname}}">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" placeholder="E-mail" name="email" type="email" value="{{request.form.email}}" >
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input class="form-control" placeholder="Password" name="password" type="password" value="{{request.form.password}}">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input class="form-control" placeholder="Re-enter Password" name="password" type="password" value="{{request.form.password}}">
+                        </div>
+                    </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="submit"  class="btn btn-primary btn-default btn-block" value="add">Add</button>
+            </div>
+
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit  row -->
+
+<div class="modal fade" id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Update User Details</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/updateUser/" id="update_form">
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input class="form-control" name="id" type="text" id ="UID" value="" readonly >
+                    </div>
+                    <div class="form-group">
+                            <label>First Name</label>
+                            <input class="form-control" name="fname" type="text" id ="Ufname" value=""  >  
+                    </div>
+                    <div class="form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" name="lname" type="text" id ="Ulname" value=""  >  
+                    </div>
+                    <div class="form-group">
+                            <label>Email</label>
+                            <input class="form-control" name="email" type="text" id ="Uemail" value=""  >  
+                    </div>
+            </div>
+            <div class="modal-footer ">
+            <button type="submit"  class="btn btn-primary btn-default btn-block" value="update">Update</button>
+            </div>
+        </form>
+        </div>
+    <!-- /.modal-dialog --> 
+    </div>
+<!-- /.modal-dialog --> 
+</div>
 
 
 
-
+<div class="row">
+    </br>
+</div>
 
 <div class="row">
     <div class="col-lg-12">
@@ -39,17 +170,24 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
-                        <th>Password</th>
+                        <th><center>Edit</center></th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for row in rows %}
                     <tr>
-                        <td>{{row["MID"]}}</td>
-                        <td>{{row["Mfname"]}}</td>
-                        <td>{{row["Mlname"]}}</td>
-                        <td>{{row["Memail"]}}</td>
-                        <td>**************</td>
+                        <td>{{row["user_id"]}}</td>
+                        <td>{{row["user_fname"]}}</td>
+                        <td>{{row["user_lname"]}}</td>
+                        <td>{{row["user_email"]}}</td>
+                        <td><center>
+                            <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
+                            data-id="{{row['user_id']}}" data-fname="{{row['user_fname']}}" data-lname="{{row['user_lname']}}" data-email="{{row['user_email']}}" 
+                            data-target="#edit"  href="#edit">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                        </center></td>
+                        
 
                     </tr>
                 {% endfor %}

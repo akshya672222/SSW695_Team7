@@ -6,11 +6,34 @@
 
 {% block body %}
 
+<script type="text/javascript">
+    function form_submit() {
+      document.getElementById("add_form").submit();
+     }
+    
+    function form_submit() {
+      document.getElementById("update_form").submit();
+     }
+
+        
+     $(document).on("click", ".open-AddBookDialog", function () {
+     var Cid = $(this).data('id');
+     var category = $(this).data('category');
+
+
+     $(".modal-body #CID").val( Cid );
+     $(".modal-body #category").val( category );
+
+});
+</script>
+
+
+
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">
             Categories
-            <small> list of all events' categories of Reportal</small>
+            <small> list of all categories of Reportal</small>
         </h1>
         <ol class="breadcrumb">
             <li>
@@ -24,16 +47,27 @@
 </div>
 
 <div class="row">
-    <!-- Button trigger modal -->
-    <div class="col-lg-12" align="right">
-    <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
-    <i class="fa fa-plus"></i>  Add Category
-    </button>
+   
+    <div class="col-sm-8" align="left">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert" >
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{message}}
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
     </div>
+         <!-- Button trigger modal -->
+    <div class="col-sm-4" align="right">
+            <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
+            <i class="fa fa-plus"></i>  Add Category
+            </button>
+     </div>
 
-
-
-    <!-- Modal -->
+<!-- Modal Add Table -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -42,29 +76,55 @@
             <h4 class="modal-title" id="myModalLabel">Add Category</h4>
           </div>
           <div class="modal-body">
-                <form role="form" method="post">
+                <form role="form" method="post" action="/addCategory/" id="add_form">
                 <fieldset>
-
-                    <div class="form-group">
-                        <label>ID</label>
-                        <input class="form-control" placeholder="ID" name="id" type="text" value="{{request.form.id}}" autofocus>
-                    </div>
                     <div class="form-group">
                         <label>Category</label>
                         <input class="form-control" placeholder="Category" name="category" type="text" value="{{request.form.category}}">
                     </div>
                     
                 </fieldset>
-                </form>
           </div>
           <div class="modal-footer">
             <button type="submit"  class="btn btn-primary btn-default btn-block" value="add">Add</button>
 
           </div>
+        </form>
+
         </div>
       </div>
     </div>
 </div>
+
+<!-- Modal Edit  row -->
+<div class="modal fade" id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Update User Details</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" action="/updateCategory/" id="update_form">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input class="form-control" name="id" type="text" id ="CID" value="" readonly >
+                        </div>
+                        <div class="form-group">
+                                <label>Category</label>
+                                <input class="form-control" name="category" type="text" id ="category" value=""  >  
+                        </div>
+
+                </div>
+                <div class="modal-footer ">
+                <button type="submit"  class="btn btn-primary btn-default btn-block" value="update">Update</button>
+                </div>
+            </form>
+            </div>
+        <!-- /.modal-dialog --> 
+        </div>
+    <!-- /.modal-dialog --> 
+    </div>
 
 <div class="row">
     </br>
@@ -78,14 +138,22 @@
                     <tr class = "active">
                         <th>ID</th>
                         <th>Category</th>
+                        <th><center>Edit</center></th>
 
                     </tr>
                 </thead>
                 <tbody>
                 {% for row in rows %}
                     <tr>
-                        <td>{{row["CID"]}}</td>
-                        <td>{{row["Name"]}}</td>
+                        <td>{{row["category_id"]}}</td>
+                        <td>{{row["category_name"]}}</td>
+                        <td><center>
+                                <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
+                                data-id="{{row['category_id']}}" data-category="{{row['category_name']}}" 
+                                data-target="#edit"  href="#edit">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </button>
+                        </center></td>
                     </tr>
                 {% endfor %}
                 </tbody>

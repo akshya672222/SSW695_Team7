@@ -52,37 +52,26 @@ def login_required(f):
 #login
 @app.route('/',methods=["GET","POST"])
 def login():
-    error = ''
-    try:
-        con, cur = connection()
-        if request.method == "POST":
-        	#Check for super admin
-            if request.form['email'] == 'admin@admin.com' and request.form['password'] == 'password':
-                session['logged_in'] = True
-                session['name'] = 'ADMIN'
-                return redirect(url_for('dashboard'))
-            
-            #Check for admin other than super admin
-            url_get_people_list = api_url + 'login'
-            payload = {
-                'email': request.form['email'],
-                'password': request.form['password'] #sha256_crypt.hash(request.form['password'])
-            }
-            json_data = json.dumps(payload).encode('utf8')
-            url_req = urllib2.Request(url_get_people_list, headers={
-                                      'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
-            response = urllib2.urlopen(url_req).read().decode('utf8')
-            response_json = json.loads(response)
-            if response_json['status_code'] == 200:
-            	session['logged_in'] = True
-            	session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
-            	return redirect(url_for("dashboard"))
+    """verify user credintials and redirects to dashboard"""
+    if request.method == "POST":
+        
+        url_get_people_list = api_url + 'login'
+        payload = {'email': request.form['email'], 'password': request.form['password'], "user_type":3} #sha256_crypt.hash(request.form['password'])
+        json_data = json.dumps(payload).encode('utf8') #encoding variables to utf8
+        url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'} , method='POST', data=json_data)
+        
+        #call api 
+        response = urllib2.urlopen(url_req).read().decode('utf8') 
+        response_json = json.loads(response) #convert string to dictionary
+
+        if response_json['status_code'] == 200: #if response is successful
+            session['logged_in'] = True
+            session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
+            return redirect(url_for("dashboard"))
+        else:
             error = str(response_json['message'])
-        return render_template("login.html", error=error)
-    except Exception as e:
-        #flash(e)
-        error = "Invalid credentials, try again."
-        return render_template("login.html", error = e)  
+            flash(error)
+    return render_template("login.html")
 
 #logout
 @app.route("/logout/")
@@ -96,45 +85,101 @@ def logout():
 @app.route('/users/')
 @login_required
 def users():
-	con, cur = connection()
-	cur.execute("select * from Users")
-	rows = cur.fetchall()
-	return render_template("users.html",rows = rows)
+    #Fetch admin from database -> Fetch admin list from server
+    page_number = 1
+    payload = {"user_type": 1}
+    json_data = json.dumps(payload).encode('utf8')
+    url_get_people_list = api_url + 'get_user_list/' + str(page_number) 
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        print(response_json['result'])
+        return render_template("users.html", rows = response_json['result'])  
+    else:
+        flash(message)
+        return redirect(url_for('users'))
 
-#display events
-@app.route('/issues/')
+@app.route('/addUser/',methods=["POST"])
 @login_required
-def issues():
-	con, cur = connection()
-	cur.execute("select * from Issues")
-	rows = cur.fetchall()
-	return render_template("issues.html",rows = rows)
+def addUser():
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'register'
+            payload = {
+                'email': request.form['email'],
+                'password': request.form['password'], #sha256_crypt.hash(request.form['password']),
+                'firstname': request.form['fname'],
+                'lastname': request.form['lname'],
+                'category': 0,
+                'type': 1,
+                'status':0,
+                'token':0
+            }
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = 'User added successfuly!'
+            else:
+            	message = response_json['message']
+            flash(message)
+            return redirect(url_for('users'))
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('users'))
+
+@app.route('/updateUser/',methods=["POST"])
+@login_required
+def updateUser():
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'update_user_settings'
+            payload = {'email': request.form['email'], 'firstname': request.form['fname'], 'lastname': request.form['lname']}
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+                message = 'User Updated successfuly!'
+            else:
+                print(response_json['message'])
+                message = response_json['message']
+            flash(message)
+            return redirect(url_for('users'))
+        
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('users'))
+
 
 #display admins
 @app.route('/admin/',methods=["GET"])
 @login_required
 def admin():
     #Fetch admin from database -> Fetch admin list from server
-    con, cur = connection()
-    cur.execute("select * from Users where user_type = 3")
-    rows = cur.fetchall()
-
     page_number = 1
-    url_get_people_list = api_url + 'get_user_list/' + str(page_number)
-    url_req = urllib2.Request(url_get_people_list, headers={
-                                      'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    payload = {"user_type": 3}
+    json_data = json.dumps(payload).encode('utf8')
+    url_get_people_list = api_url + 'get_user_list/' + str(page_number) 
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-    	print(response_json['result'])
+        return render_template("admin.html", rows = response_json['result'])  
     else:
-    	print(response_json['message'])
-    return render_template("admin.html", rows = rows)  
+        flash(message)
+        return redirect(url_for('admin'))
 
 @app.route('/addAdmin/',methods=["POST"])
 @login_required
 def addAdmin():
-    con, cur = connection()
     try:
         if request.method == "POST":
             url_get_people_list = api_url + 'register'
@@ -166,46 +211,74 @@ def addAdmin():
     return redirect(url_for('admin'))
     
 
+
+#display events
+@app.route('/issues/')
+@login_required
+def issues():
+	con, cur = connection()
+	cur.execute("select * from Issues")
+	rows = cur.fetchall()
+	return render_template("issues.html",rows = rows)
+
 #display categories
 @app.route('/category/')
 @login_required
 def category():
-	con, cur = connection()
-	cur.execute("select * from Category")   
-	rows = cur.fetchall()
-	return render_template("category.html",rows = rows)
+        #Fetch admin from server using API
+    page_number = 1
+    payload = {"user_type": 1}
+    json_data = json.dumps(payload).encode('utf8')
+    url_get_people_list = api_url + 'get_user_list/' + str(page_number) 
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        print(response_json['result'])
+        return render_template("category.html", rows = response_json['result'])  
+    else:
+        flash(message)
+        return redirect(url_for('category'))
 
-#display TimeStamp
-@app.route('/maintenance/')
+
+@app.route('/maintenance/',methods=["GET"])
 @login_required
 def maintenance():
-    con, cur = connection()
-    cur.execute("select * from Maintenance")   
-    rows = cur.fetchall()
-    return render_template("maintenance.html",rows = rows)
+    #Fetch maintenance list using the api from server
+    page_number = 1
+    payload = {"user_type": 2}
+    json_data = json.dumps(payload).encode('utf8')
+    url_get_people_list = api_url + 'get_user_list/' + str(page_number) 
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        print(response_json['result'])
+        return render_template("maintenance.html", rows = response_json['result'])  
+    else:
+        flash(message)
+        return redirect(url_for('maintenance'))
+
+
+
+
+
+
 
 @app.route('/dashboard/')
 @login_required
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route('/registerm/', methods=["GET","POST"])
-def register_pagew():
-    try:
-        con,cur = connection()
-        return("okay")
-    except Exception as e:
-        return(str(e))
+
 
 @app.route('/blank-page/')
 @login_required
 def blankpage():
     return render_template("blank-page.html")
 
-@app.route('/h/')
-def hpage():
-    return render_template("tables.html")	
 
+#display TimeStamp
 @app.template_filter('ctime')
 def timectime(s):
     unix_timestamp = float(s)
