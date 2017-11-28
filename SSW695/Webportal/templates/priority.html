@@ -1,8 +1,8 @@
 {% extends "blank-page.html" %}
 
-{% set active_page = "categories" %}
+{% set active_page = "priorities" %}
 
-{% block title %} Categories {% endblock %}
+{% block title %} Priorities {% endblock %}
 
 {% block body %}
 
@@ -17,12 +17,12 @@
 
         
      $(document).on("click", ".open-AddBookDialog", function () {
-     var Cid = $(this).data('id');
-     var category = $(this).data('category');
+     var Pid = $(this).data('id');
+     var priority = $(this).data('priority');
 
 
-     $(".modal-body #CID").val( Cid );
-     $(".modal-body #category").val( category );
+     $(".modal-body #PID").val( Pid );
+     $(".modal-body #priority").val( priority );
 
 });
 </script>
@@ -32,15 +32,15 @@
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">
-            Categories
-            <small> list of all categories of Reportal</small>
+            Priorities
+            <small> list of all issues priorities of Reportal</small>
         </h1>
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
             </li>
             <li class="active">
-                <i class="fa fa-file"></i>  Categories
+                <i class="fa fa-file"></i>  Priorities
             </li>
         </ol>
     </div>
@@ -63,7 +63,7 @@
          <!-- Button trigger modal -->
     <div class="col-sm-4" align="right">
             <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
-            <i class="fa fa-plus"></i>  Add Category
+            <i class="fa fa-plus"></i>  Add Priority
             </button>
      </div>
 
@@ -73,14 +73,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Add Category</h4>
+            <h4 class="modal-title" id="myModalLabel">Add Priority</h4>
           </div>
           <div class="modal-body">
-                <form role="form" method="post" action="/addCategory/" id="add_form">
+                <form role="form" method="post" action="/addPriority/" id="add_form">
                 <fieldset>
                     <div class="form-group">
-                        <label>Category</label>
-                        <input class="form-control" placeholder="Category" name="category" type="text" value="{{request.form.category}}">
+                        <label>Priority</label>
+                        <input class="form-control" placeholder="Priority" name="priority" type="text" value="{{request.form.priority}}">
                     </div>
                     
                 </fieldset>
@@ -102,17 +102,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Update Category Details</h4>
+                        <h4 class="modal-title" id="myModalLabel">Update User Details</h4>
                 </div>
                 <div class="modal-body">
-                    <form role="form" method="GET" action="/updateCategory/" id="update_form">
+                    <form role="form" method="post" action="/updatePriority/" id="update_form">
                         <div class="form-group">
                             <label>ID</label>
-                            <input class="form-control" name="id" type="text" id ="CID" value="" readonly >
+                            <input class="form-control" name="id" type="text" id ="PID" value="" readonly >
                         </div>
                         <div class="form-group">
-                                <label>Category</label>
-                                <input class="form-control" name="category" type="text" id ="category" value=""  >  
+                                <label>Priority</label>
+                                <input class="form-control" name="priority" type="text" id ="priority" value=""  >  
                         </div>
 
                 </div>
@@ -137,7 +137,7 @@
                 <thead>
                     <tr class = "active">
                         <th>ID</th>
-                        <th>Category</th>
+                        <th>Priority</th>
                         <th><center>Edit</center></th>
 
                     </tr>
@@ -145,11 +145,11 @@
                 <tbody>
                 {% for row in rows %}
                     <tr>
-                        <td>{{row["Category_id"]}}</td>
-                        <td>{{row["Category_name"]}}</td>
+                        <td>{{row["Priority_id"]}}</td>
+                        <td>{{row["Priority_name"]}}</td>
                         <td><center>
                                 <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
-                                data-id="{{row['Category_id']}}" data-category="{{row['Category_name']}}" 
+                                data-id="{{row['ategory_id']}}" data-priority="{{row['Priority_name']}}" 
                                 data-target="#edit"  href="#edit">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </button>

@@ -216,29 +216,134 @@ def addAdmin():
 @app.route('/issues/')
 @login_required
 def issues():
-	con, cur = connection()
-	cur.execute("select * from Issues")
-	rows = cur.fetchall()
-	return render_template("issues.html",rows = rows)
+    #Fetch admin from database -> Fetch admin list from server
+    page_number = 1
+    url_get_people_list = api_url + 'get_issue_list/' + str(page_number) 
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        return render_template("issues.html", rows = response_json['result'])  
+    else:
+        flash(message)
+        return redirect(url_for('issues'))
+
+@app.route('/updateIssue/',methods=["POST"])
+@login_required
+def updateIssue():
+    con, cur = connection()
+    try:
+            cur.execute("UPDATE Issues SET priority = ? , description = ? , location = ?, status = ? WHERE IssID = ?", 
+            (request.form['priority'],request.form['description'], request.form['location'],request.form['status'], request.form['id']))
+            con.commit()
+            flash("Updated Successfuly!")
+            return redirect(url_for('issues'))
+
+    except Exception as e:
+        return render_template("404.html")  
+    return redirect(url_for('issues'))
+
 
 #display categories
 @app.route('/category/')
 @login_required
 def category():
-        #Fetch admin from server using API
-    page_number = 1
-    payload = {"user_type": 1}
-    json_data = json.dumps(payload).encode('utf8')
-    url_get_people_list = api_url + 'get_user_list/' + str(page_number) 
-    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+     #Fetch category from server using API
+    url_get_people_list = api_url + 'get_categories'
+    print(url_get_people_list)
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-        print(response_json['result'])
-        return render_template("category.html", rows = response_json['result'])  
+        return render_template("category.html", rows = response_json['categories'])  
     else:
         flash(message)
         return redirect(url_for('category'))
+
+
+#display categories
+@app.route('/addCategory/',methods=["POST"])
+@login_required
+def addCategory():
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'category'
+            payload = {
+                'category_name': request.form['category'],
+                'category_status': 1
+
+            }
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = 'Admin added successfuly!'
+            else:
+            	message = response_json['message']
+            flash(message)
+            return redirect(url_for('category'))
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('category'))
+
+#display categories
+@app.route('/updateCategory/',methods=["GET"])
+@login_required
+def updateCategory():
+    print("jxisjxijidjicjidcihdchhhhhhhh")
+    print(request.method)
+    print(request)
+    print(request.form['id'])
+    print("swkodkowk")
+    try:
+        if request.method == "GET":
+            url_get_people_list = api_url + 'category'
+            try:
+                payload = {
+                    'category_id': request.form['id'],
+                    'category_name': request.form['category'],
+                    'category_status': 1
+                }
+            except Exception as e: 
+                print('e:',e)
+
+            print(payload)
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method="PUT", data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = 'Admin added successfuly!'
+            else:
+            	message = response_json['message']
+            flash(message)
+            return redirect(url_for('category'))
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('category'))
+
+#display categories
+@app.route('/priority/')
+@login_required
+def priority():
+    #Fetch priority from server using API
+    url_get_people_list = api_url + 'get_priorities'
+    print(url_get_people_list)
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        return render_template("priority.html", rows = response_json['priorities'])  
+    else:
+        flash(message)
+        return redirect(url_for('priority'))
 
 
 @app.route('/maintenance/',methods=["GET"])
