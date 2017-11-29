@@ -280,7 +280,7 @@ def addCategory():
             response_json = json.loads(response)
             message = ''
             if response_json['status_code'] == 200:
-            	message = 'Admin added successfuly!'
+            	message = 'Category added successfuly!'
             else:
             	message = response_json['message']
             flash(message)
@@ -291,7 +291,7 @@ def addCategory():
     return redirect(url_for('category'))
 
 #display categories
-@app.route('/updateCategory/',methods=["GET"])
+@app.route('/updateCategory/',methods=["POST"])
 @login_required
 def updateCategory():
     print("jxisjxijidjicjidcihdchhhhhhhh")
@@ -300,7 +300,7 @@ def updateCategory():
     print(request.form['id'])
     print("swkodkowk")
     try:
-        if request.method == "GET":
+        if request.method == "POST":
             url_get_people_list = api_url + 'category'
             try:
                 payload = {
@@ -319,7 +319,7 @@ def updateCategory():
             response_json = json.loads(response)
             message = ''
             if response_json['status_code'] == 200:
-            	message = 'Admin added successfuly!'
+            	message = response_json['message']
             else:
             	message = response_json['message']
             flash(message)
@@ -344,6 +344,71 @@ def priority():
     else:
         flash(message)
         return redirect(url_for('priority'))
+
+#display categories
+@app.route('/addPriority/',methods=["POST"])
+@login_required
+def addPriority():
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'priority'
+            payload = {
+                'priority_name': request.form['priority'],
+                'priority_status': 1
+
+            }
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = 'Priority added successfuly!'
+            else:
+            	message = response_json['message']
+            flash(message)
+            return redirect(url_for('priority'))
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('priority'))
+
+
+#display categories
+@app.route('/updatePriority/',methods=["POST"])
+@login_required
+def updatePriority():
+
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'priority'
+            try:
+                payload = {
+                    'priority_id': request.form['id'],
+                    'priority_name': request.form['priority'],
+                    'priority_status': 1
+                }
+            except Exception as e: 
+                print('e:',e)
+
+            print(payload)
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={
+                'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method="PUT", data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+            	message = "response_json['message']"
+            else:
+            	message = response_json['message']
+            flash(message)
+            return redirect(url_for('priority'))
+    except Exception as e:
+        print('exception = ', e)
+        return render_template("404.html")  
+    return redirect(url_for('priority'))
 
 
 @app.route('/maintenance/',methods=["GET"])
