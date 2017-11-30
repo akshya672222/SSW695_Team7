@@ -365,6 +365,29 @@ def upload_image():
         output = str(error)
     return output
 
+# Post Issue route
+@app.route('/api/post_issue', methods=['POST'])
+def upload_image():
+    output = "hello error"
+    try:
+        print 'Inside POST ISSUE Block.'
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                print 'No file part'
+            image = request.files['file']
+            # if user does not select file, browser also
+            # submit a empty part without filename
+            if image.filename == '':
+                print 'No selected file'
+            if image and allowed_file(image.filename.lower()):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                output = 'Executed'
+    except Exception as error:
+        output = str(error)
+    return output
+
 # LOGS
 @app.route('/api/logs', methods = ['GET'])
 def log():
