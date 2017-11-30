@@ -22,11 +22,17 @@ import java.io.FileOutputStream
 import kotlinx.android.synthetic.main.activity_post_issue.*
 import android.content.pm.PackageInfo
 import android.graphics.drawable.Drawable
+import android.graphics.BitmapFactory
+import android.R.attr.data
+import java.io.FileNotFoundException
+
+
 
 
 class PostIssueActivity : AppCompatActivity() {
 
     val CAMERA_REQUEST_CODE =0
+    val GALLERY_REQUEST_CODE = 1
     val MY_PERMISSIONS_REQUEST_CAMERA =0
     val MY_REQUEST_CAMERA = 10
     val MY_REQUEST_WRITE_CAMERA = 11
@@ -56,6 +62,10 @@ class PostIssueActivity : AppCompatActivity() {
  //       val intentToHistory = Intent(this, historyActivity::class.java)
         buttonGallery.setOnClickListener {
             //checkPermissionGallery()
+
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, GALLERY_REQUEST_CODE)
         }
         adddescriptionbtn.setOnClickListener {
             val intent = Intent(applicationContext, PreviewSubmission::class.java)
@@ -67,22 +77,43 @@ class PostIssueActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         println("in Activity result")
-        println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+requestCode)
+        println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + requestCode)
 
-        when(requestCode){
+        when (requestCode) {
             CAMERA_REQUEST_CODE -> {
                 println("in camera request code! ")
-                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+requestCode)
-                println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+data)
-                println("activity!!!!!!!!!!!! "+Activity.RESULT_OK)
-                if(resultCode == Activity.RESULT_OK && data != null){
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + requestCode)
+                println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + data)
+                println("activity!!!!!!!!!!!! " + Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     println("iN BITMAP CODE")
                     capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
                     //capturedImageView.setImageDrawable(data.extras.get("data") as Drawable)
                 }
             }
+            GALLERY_REQUEST_CODE -> {
+                print("Im in the gallery!")
+
+                if (resultCode === Activity.RESULT_OK) {
+                    try {
+                        print("in try block: "+data)
+//                        val imageUri = data.getData()
+//                        val imageStream = contentResolver.openInputStream(imageUri)
+//                        val selectedImage = BitmapFactory.decodeStream(imageStream)
+//                        capturedImageView.setImageBitmap(selectedImage)
+                    } catch (e: FileNotFoundException) {
+                        println("In catch of gallery!")
+                        e.printStackTrace()
+                        Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
+                    }
+
+                } else {
+                    println("in else of gallery!")
+                    Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show()
+                }
+            }
             else -> {
-                Toast.makeText(this, "Unrecognized request code",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unrecognized request code", Toast.LENGTH_SHORT).show()
             }
         }
     }
