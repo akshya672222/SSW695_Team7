@@ -256,16 +256,7 @@ class Login : AppCompatActivity() {
                                         Toast.makeText(this@Login, message, Toast.LENGTH_SHORT).show()
                                         System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+message)
                                     }
-                            override fun run() { System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ IN FUN RUN ")
-                                Toast.makeText(this@Login, message, Toast.LENGTH_SHORT).show()
-                                        }
-                                /*
-                                fun onMainThread(runnable: Runnable) {
-                                    val mainHandler = Handler(Looper.getMainLooper())
-                                    mainHandler.post(runnable)
-                                }
 
-                                */
                             }.start()
 
                             //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show()

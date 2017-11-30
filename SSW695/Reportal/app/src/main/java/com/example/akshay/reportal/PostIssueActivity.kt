@@ -66,12 +66,19 @@ class PostIssueActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        println("in Activity result")
+        println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+requestCode)
+
         when(requestCode){
             CAMERA_REQUEST_CODE -> {
-                if(requestCode == Activity.RESULT_OK && data != null){
-
+                println("in camera request code! ")
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+requestCode)
+                println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+data)
+                println("activity!!!!!!!!!!!! "+Activity.RESULT_OK)
+                if(resultCode == Activity.RESULT_OK && data != null){
+                    println("iN BITMAP CODE")
                     capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
-                    capturedImageView.setImageDrawable(data.extras.get("data") as Drawable)
+                    //capturedImageView.setImageDrawable(data.extras.get("data") as Drawable)
                 }
             }
             else -> {
