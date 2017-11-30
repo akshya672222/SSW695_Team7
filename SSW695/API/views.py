@@ -342,51 +342,81 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-# Post Issue route
-@app.route('/api/post_issue', methods=['POST'])
-def upload_image():
-    output = "hello error"
-    try:
-        print 'Inside POST ISSUE Block.'
-        if request.method == 'POST':
-            # check if the post request has the file part
-            if 'file' not in request.files:
-                print 'No file part'
-            image = request.files['file']
-            # if user does not select file, browser also
-            # submit a empty part without filename
-            if image.filename == '':
-                print 'No selected file'
-            if image and allowed_file(image.filename.lower()):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                output = 'Executed'
-    except Exception as error:
-        output = str(error)
-    return output
 
-# Post Issue route
-@app.route('/api/post_issue', methods=['POST'])
-def upload_image():
-    output = "hello error"
+
+
+# Add Issue / Post Issue
+@app.route('/api/post_issue', methods = ['POST'])
+def post_issue():
+        print 'TEST: Inside post_issue route.'
+        error = None
+        output = []
+        status_code = 400
+
+        try:
+            if request.method == 'POST':
+                print 'TEST: Inside POST Block for post_issue.'
+                
+                user_id                 = request.form['user_id']            
+                issue_lat               = request.form['issue_lat']
+                issue_long              = request.form['issue_long']
+                issue_time              = request.form['issue_time']
+                issue_description       = request.form['issue_description']
+                issue_category_id       = request.form['issue_category_id']
+                issue_priority          = request.form['issue_priority']
+
+                output = []
+                if 'file' not in request.files:
+                    output = 'No file part'
+                image = request.files['file']
+
+                # Check if the user has selected any image
+                if image.filename == '':
+                    output = 'No image selected'
+
+                if image and allowed_file(image.filename.lower()):
+                    filename = secure_filename(image.filename)
+                    #issue_picture_name = image.filename
+
+                    user_data       = Users.query.filter_by(UID = user_id).first()
+                    user_name_id    = "".join(user_data.Fname + str(user_data.UID))
+                            
+                    # Use os.makedirs(folder_location) for creating user related folders
+                    folder_location = app.config['UPLOAD_FOLDER'] + '/' + user_name_id
+                    os.makedirs(folder_location)
+                    issue_picpath   = folder_location + '/' + image.filename
+
+                    image.save(os.path.join(folder_location, filename)) 
+                    new_issue = Issues(Iuid = user_id, Ilat = issue_lat, Ilon = issue_long, Itime = issue_time, Idescription = issue_description, Icategory_id = issue_category_id, Ipriority = issue_priority, Ipicpath = issue_picpath)
+                    db.session.add(new_issue)
+                    db.session.commit()
+                    output          = 'Issue posted successfully.'
+                    status_code     = 200
+        except Exception as e:
+            print 'EXCEPTION:',e
+        return jsonify({'result' : output, 'status_code' : status_code})
+
+# List all the Issues
+@app.route('/api/get_issue', methods = ['GET'])
+def getIssueList():
+
+    print 'TEST: Inside post_issue route.'
+    error = None
+    output = []
+    status_code = 400
+
     try:
-        print 'Inside POST ISSUE Block.'
-        if request.method == 'POST':
-            # check if the post request has the file part
-            if 'file' not in request.files:
-                print 'No file part'
-            image = request.files['file']
-            # if user does not select file, browser also
-            # submit a empty part without filename
-            if image.filename == '':
-                print 'No selected file'
-            if image and allowed_file(image.filename.lower()):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                output = 'Executed'
-    except Exception as error:
-        output = str(error)
-    return output
+        if request.method == 'GET':
+            issueData = Issues.query.all()
+            print issueData
+            status_code = 200
+
+    except Exception as e:
+        print e
+
+
+    return jsonify({'result' : output, 'status_code' : status_code})
+
 
 # LOGS
 @app.route('/api/logs', methods = ['GET'])
