@@ -15,6 +15,8 @@ import org.json.JSONObject
 import org.json.JSONException
 import android.widget.EditText
 import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import java.io.IOException
 import java.net.URL
 import java.net.HttpURLConnection
@@ -131,15 +133,7 @@ class Registration : AppCompatActivity() {
         override fun doInBackground(vararg params: Void): Boolean? {
             try {
                 val code = register()
-                if(code.equals("OK")) {
-                    Toast.makeText(applicationContext, "Registered successfully", Toast.LENGTH_LONG).show()
-                    //val intent = Intent(this, Homepage::class.java)
-                    //startActivity(intent)
 
-                    val intent = Intent(applicationContext, Homepage::class.java)
-
-                    startActivity(intent)
-                }
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: JSONException) {
@@ -182,17 +176,51 @@ class Registration : AppCompatActivity() {
 
             val br = BufferedReader(InputStreamReader(conn.inputStream))
             val builder = StringBuilder()
+            var statusCode: Int = 0
 
             println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+br.toString())
+            //println(JSONObject(builder.toString()))
             var line: String = br.readLine()
-            while (line != null){
-            builder.append(line + "\n")
 
-                   println("in while ---------------------------"+line)
-                line = br.readLine()
-                if line.startsWith() {}
+            while ({ line = br.readLine(); line }() != null) {
+                System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^line    "+line);
+                val separate2 = line.split(":","  ")
+                println(separate2)
+
+                println(separate2.size)
+                if(line.contains("status_code")) {
+                    if (line.contains("400")) {
+
+                         println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& "+line)
+                        object : Thread() {
+
+                            fun onMainThread(runnable: Runnable) {
+                                val mainHandler = Handler(Looper.getMainLooper())
+                                mainHandler.post(runnable)
+                                Toast.makeText(this@Registration, "Account already exists", Toast.LENGTH_SHORT).show()
+                                System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+"Account already exists!")
+                            }
+
+                            /*
+                            fun onMainThread(runnable: Runnable) {
+                                val mainHandler = Handler(Looper.getMainLooper())
+                                mainHandler.post(runnable)
+                            }
+
+                            */
+                        }.start()
+                    }
+                    else if (line.contains("200")) {
+                    println ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+line)
+                        val intent = Intent(applicationContext, Homepage::class.java)
+                        startActivity(intent)
+                    }
+
+                    break
+                }
 
             }
+            /*
             println(JSONObject(builder.toString()))
             val responseBody = JSONObject(builder.toString())
 
@@ -209,7 +237,7 @@ class Registration : AppCompatActivity() {
 
                 status_code= resultJsonBlock.get("status_code").toString()
                 System.out.println("^^^^^^^^^^^^^^^^************************ here "+status_code);}
-
+            */
             val responseCode = conn.getResponseCode()
             if(responseCode.equals("OK")) {
                 Toast.makeText(applicationContext, "Registered successfully", Toast.LENGTH_LONG).show()

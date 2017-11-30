@@ -229,6 +229,7 @@ class Login : AppCompatActivity() {
                         builder.append(line + "\n");
                     }
                     br.close()
+
                     val resultJsonBlock = JSONObject(builder.toString())
                     val status_code:String
                     System.out.println("^^^^^^^^^^^^^^^^************************ resultJsonBlock"+resultJsonBlock);
