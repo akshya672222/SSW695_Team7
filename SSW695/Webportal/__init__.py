@@ -18,7 +18,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
 
-api_url = 'http://ec2-52-37-224-72.us-west-2.compute.amazonaws.com/api/'
+
+api_url = 'http://ec2-34-207-75-73.compute-1.amazonaws.com/api/'
+            
 
 def connection():
 	try:
@@ -94,7 +96,6 @@ def users():
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-        print(response_json['result'])
         return render_template("users.html", rows = response_json['result'])  
     else:
         flash(message)
@@ -129,7 +130,6 @@ def addUser():
             flash(message)
             return redirect(url_for('users'))
     except Exception as e:
-        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('users'))
 
@@ -148,13 +148,11 @@ def updateUser():
             if response_json['status_code'] == 200:
                 message = 'User Updated successfuly!'
             else:
-                print(response_json['message'])
                 message = response_json['message']
             flash(message)
             return redirect(url_for('users'))
         
     except Exception as e:
-        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('users'))
 
@@ -206,7 +204,6 @@ def addAdmin():
             flash(message)
             return redirect(url_for('admin'))
     except Exception as e:
-        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('admin'))
     
@@ -250,7 +247,6 @@ def updateIssue():
 def category():
      #Fetch category from server using API
     url_get_people_list = api_url + 'get_categories'
-    print(url_get_people_list)
     url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
@@ -286,7 +282,6 @@ def addCategory():
             flash(message)
             return redirect(url_for('category'))
     except Exception as e:
-        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('category'))
 
@@ -294,24 +289,15 @@ def addCategory():
 @app.route('/updateCategory/',methods=["POST"])
 @login_required
 def updateCategory():
-    print("jxisjxijidjicjidcihdchhhhhhhh")
-    print(request.method)
-    print(request)
-    print(request.form['id'])
-    print("swkodkowk")
+
     try:
         if request.method == "POST":
             url_get_people_list = api_url + 'category'
-            try:
-                payload = {
-                    'category_id': request.form['id'],
-                    'category_name': request.form['category'],
-                    'category_status': 1
-                }
-            except Exception as e: 
-                print('e:',e)
-
-            print(payload)
+            payload = {
+                'category_id': request.form['id'],
+                'category_name': request.form['category'],
+                'category_status': 1
+            }
             json_data = json.dumps(payload).encode('utf8')
             url_req = urllib2.Request(url_get_people_list, headers={
                 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method="PUT", data=json_data)
@@ -406,7 +392,6 @@ def updatePriority():
             flash(message)
             return redirect(url_for('priority'))
     except Exception as e:
-        print('exception = ', e)
         return render_template("404.html")  
     return redirect(url_for('priority'))
 
@@ -423,16 +408,10 @@ def maintenance():
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-        print(response_json['result'])
         return render_template("maintenance.html", rows = response_json['result'])  
     else:
         flash(message)
         return redirect(url_for('maintenance'))
-
-
-
-
-
 
 
 @app.route('/dashboard/')
@@ -457,5 +436,3 @@ def timectime(s):
 if __name__ == "__main__":
     #app.secret_key = '39ie94884ur4yr75yr57py'
     app.run()
-
-
