@@ -167,7 +167,7 @@ class Login : AppCompatActivity() {
             @Throws(IOException::class, JSONException::class)
             get() {
                 System.out.println("Exception thrown")
-                val url = URL("http://ec2-52-37-224-72.us-west-2.compute.amazonaws.com/api/login")
+                val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/login")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "GET"
                 conn.setRequestProperty("Content-Type", "application/json")
@@ -205,6 +205,7 @@ class Login : AppCompatActivity() {
                 val responseCode = conn.responseCode
                 println("I am here in doInBackground " + responseCode)
                 if (responseCode == 200) {
+
                     System.out.println("Login Successfull");
                     val sp = getSharedPreferences("Login", 0)
                     val editor = sp.edit()
@@ -228,6 +229,7 @@ class Login : AppCompatActivity() {
                         builder.append(line + "\n");
                     }
                     br.close()
+
                     val resultJsonBlock = JSONObject(builder.toString())
                     val status_code:String
                     System.out.println("^^^^^^^^^^^^^^^^************************ resultJsonBlock"+resultJsonBlock);
@@ -254,16 +256,7 @@ class Login : AppCompatActivity() {
                                         Toast.makeText(this@Login, message, Toast.LENGTH_SHORT).show()
                                         System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+message)
                                     }
-                            override fun run() { System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ IN FUN RUN ")
-                                Toast.makeText(this@Login, message, Toast.LENGTH_SHORT).show()
-                                        }
-                                /*
-                                fun onMainThread(runnable: Runnable) {
-                                    val mainHandler = Handler(Looper.getMainLooper())
-                                    mainHandler.post(runnable)
-                                }
 
-                                */
                             }.start()
 
                             //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show()
@@ -353,7 +346,7 @@ class Login : AppCompatActivity() {
         @Throws(IOException::class, JSONException::class)
         private fun connect(): HttpURLConnection {
             System.out.println("I am here in connect");
-            val url = URL("http://ec2-52-37-224-72.us-west-2.compute.amazonaws.com/api/login")
+            val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/login")
             //URL url = new URL("http://34.208.210.71/login");
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"

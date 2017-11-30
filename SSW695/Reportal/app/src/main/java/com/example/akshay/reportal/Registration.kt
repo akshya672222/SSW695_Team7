@@ -11,7 +11,20 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_forgotpassword.*
 import kotlinx.android.synthetic.main.activity_registration.*
-
+import org.json.JSONObject
+import org.json.JSONException
+import android.widget.EditText
+import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
+import java.io.IOException
+import java.net.URL
+import java.net.HttpURLConnection
+import java.io.BufferedWriter
+import java.io.OutputStreamWriter
+import java.io.InputStreamReader
+import java.io.BufferedReader
+import java.net.MalformedURLException;
 
 class Registration : AppCompatActivity() {
 
@@ -99,9 +112,8 @@ class Registration : AppCompatActivity() {
                 alertDialog.show()
             }
             else{
-                Toast.makeText(applicationContext, "Registered successfully", Toast.LENGTH_LONG).show()
-                val intent = Intent(this, Homepage::class.java)
-                startActivity(intent)
+                UserRegistrationTask(fname,lname,password,email).execute()
+
             }
         }
     }
@@ -115,4 +127,172 @@ class Registration : AppCompatActivity() {
         }
         return false
     }
+
+    internal inner class UserRegistrationTask(private val firstName: String, private val lastName: String, private val password: String, private val email: String) : AsyncTask<Void, Void, Boolean>() {
+
+        override fun doInBackground(vararg params: Void): Boolean? {
+            try {
+                val code = register()
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            return null
+        }
+
+
+        @Throws(IOException::class, JSONException::class)
+        private fun register(): Int {
+            println("------------------------------------------------------I am here in register")
+            val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/register")
+            val conn = url.openConnection() as HttpURLConnection
+
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type", "application/json")
+
+
+            val requestObject = JSONObject()
+            requestObject.put("email", email)
+            requestObject.put("password", password)
+            requestObject.put("firstname", firstName)
+            requestObject.put("lastname", lastName)
+            requestObject.put("type", 1)
+            requestObject.put("status", 1)
+            requestObject.put("category", 1)
+
+            println("------------------------------------------------------I am here in connect 1234")
+
+            val os =  conn.outputStream
+            val bw = BufferedWriter(OutputStreamWriter(os, "UTF-8"))
+
+            println(requestObject)
+
+            bw.write(requestObject.toString())
+            bw.close()
+            os.close()
+
+            val br = BufferedReader(InputStreamReader(conn.inputStream))
+            val builder = StringBuilder()
+            var statusCode: Int = 0
+
+            println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+br.toString())
+            //println(JSONObject(builder.toString()))
+            var line: String = br.readLine()
+
+            while ({ line = br.readLine(); line }() != null) {
+                System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^line    "+line);
+                val separate2 = line.split(":","  ")
+                println(separate2)
+
+                println(separate2.size)
+                if(line.contains("status_code")) {
+                    if (line.contains("400")) {
+
+                         println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& "+line)
+                        object : Thread() {
+
+                            fun onMainThread(runnable: Runnable) {
+                                val mainHandler = Handler(Looper.getMainLooper())
+                                mainHandler.post(runnable)
+                                Toast.makeText(this@Registration, "Account already exists", Toast.LENGTH_SHORT).show()
+                                System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+"Account already exists!")
+                            }
+
+                            /*
+                            fun onMainThread(runnable: Runnable) {
+                                val mainHandler = Handler(Looper.getMainLooper())
+                                mainHandler.post(runnable)
+                            }
+
+                            */
+                        }.start()
+                    }
+                    else if (line.contains("200")) {
+                    println ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+line)
+                        val intent = Intent(applicationContext, Homepage::class.java)
+                        startActivity(intent)
+                    }
+
+                    break
+                }
+
+            }
+            /*
+            println(JSONObject(builder.toString()))
+            val responseBody = JSONObject(builder.toString())
+
+
+            System.out.println("The result from server...."+responseBody)
+
+            val resultJsonBlock = JSONObject(builder.toString())
+            val status_code:String
+            System.out.println("^^^^^^^^^^^^^^^^************************ resultJsonBlock"+resultJsonBlock);
+
+            System.out.println("^^^^^^^^^^^^^^^^************************ resultJsonBlock.toString()"+resultJsonBlock.toString());
+
+            if(resultJsonBlock.toString().contains("status_code")){
+
+                status_code= resultJsonBlock.get("status_code").toString()
+                System.out.println("^^^^^^^^^^^^^^^^************************ here "+status_code);}
+            */
+            val responseCode = conn.getResponseCode()
+            if(responseCode.equals("OK")) {
+                Toast.makeText(applicationContext, "Registered successfully", Toast.LENGTH_LONG).show()
+                //val intent = Intent(this, Homepage::class.java)
+                //startActivity(intent)
+
+                val intent = Intent(applicationContext, Homepage::class.java)
+
+                startActivity(intent)
+            }
+
+            return responseCode
+
+        }
+
+        fun attemptConnection() {
+            var connection: HttpURLConnection? = null
+            var reader: BufferedReader? = null
+
+            try {
+                val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/")
+
+                connection = url.openConnection() as HttpURLConnection
+                connection!!.connect()
+
+                val stream = connection!!.getInputStream()
+                reader = BufferedReader(InputStreamReader(stream))
+                val buffer = StringBuffer()
+                var line = " "
+
+                for (line in reader.readLine()){
+                    while (line != null) { buffer.append(line); }
+                }
+
+            } catch (e: MalformedURLException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } finally {
+                if (connection != null) {
+                    connection!!.disconnect()
+                }
+                try {
+                    if (reader != null) {
+                        reader!!.close()
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+            }
+
+        }
+    }
+
+
 }
+

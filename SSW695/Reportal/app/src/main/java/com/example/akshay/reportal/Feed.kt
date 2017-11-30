@@ -14,6 +14,12 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_history.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
 
 class Feed : AppCompatActivity() {
 
@@ -95,6 +101,45 @@ class Feed : AppCompatActivity() {
 //            val textView= TextView(mContext)
 //            textView.text = "Here is my row"
 //            return textView
+        }
+
+    }
+
+    fun attemptConnection() {
+        var connection: HttpURLConnection? = null
+        var reader: BufferedReader? = null
+
+        try {
+            val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/register")
+
+            connection = url.openConnection() as HttpURLConnection
+            connection!!.connect()
+
+            val stream = connection!!.getInputStream()
+            reader = BufferedReader(InputStreamReader(stream))
+            val buffer = StringBuffer()
+            var line = " "
+
+            for (line in reader.readLine()){
+                while (line != null) { buffer.append(line); }
+            }
+
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            if (connection != null) {
+                connection!!.disconnect()
+            }
+            try {
+                if (reader != null) {
+                    reader!!.close()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
         }
 
     }

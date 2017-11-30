@@ -1,0 +1,289 @@
+{% extends "blank-page.html" %}
+
+{% set active_page = "profile" %}
+
+{% block title %} Profile {% endblock %}
+
+{% block body %}
+
+<!-- <script src="js/index.js"></script> -->
+<script type="text/javascript">
+    function form_submit() {
+      document.getElementById("add_form").submit();
+     }
+    
+    function form_submit() {
+      document.getElementById("my_form").submit();
+     }
+   
+     $(document).on("click", ".open-AddBookDialog", function () {
+     var Aid = $(this).data('id');
+     var Afname = $(this).data('fname');
+     var Alname = $(this).data('lname');
+     var Aemail= $(this).data('email');
+     var password = $(this).data('password');
+
+     $(".modal-body #AID").val( Aid );
+     $(".modal-body #Afname").val( Afname );
+     $(".modal-body #Alname").val( Alname );
+     $(".modal-body #Aemail").val( Aemail );
+     $(".modal-body #password").val( password );
+});
+
+     $(function() {
+     $('#profile-image1').on('click', function() {
+     $('#profile-image-upload').click();
+     });
+  });
+
+  $(document).ready(function() {
+        $('#my_form').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                fname: {
+                    validators: {
+                            stringLength: {
+                            min: 2,
+                        },
+                            notEmpty: {
+                            message: 'Please supply your first name'
+                        }
+                    }
+                },
+                lname: {
+                    validators: {
+                        stringLength: {
+                            min: 2,
+                        },
+                        notEmpty: {
+                            message: 'Please supply your last name'
+                        }
+                    }
+                },             
+        password: {
+                validators: {
+                    notEmpty: {
+                            message: 'Please supply your password'
+                        },
+                    stringLength: {
+                            min: 8,
+                        },
+                    identical: {
+                        field: 'confirmPassword',
+                        message: 'Confirm your password below - type same password please'
+                    }
+                }
+            },
+            confirmPassword: {
+                validators: {
+                    notEmpty: {
+                            message: 'Please supply your password'
+                        },
+                    stringLength: {
+                            min: 8,
+                        },
+                    identical: {
+                        field: 'password',
+                        message: 'The password and its confirm are not the same'
+                    }
+                }
+            },
+                }
+            })
+            .on('success.form.bv', function(e) {
+                $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
+                    $('#my_form').data('bootstrapValidator').resetForm();
+    
+                // Prevent form submission
+                e.preventDefault();
+    
+                // Get the form instance
+                var $form = $(e.target);
+    
+                // Get the BootstrapValidator instance
+                var bv = $form.data('bootstrapValidator');
+    
+                // Use Ajax to submit form data
+                $.post($form.attr('action'), $form.serialize(), function(result) {
+                    console.log(result);
+                }, 'json');
+            });
+    });
+
+</script>
+
+<style>
+        input.hidden {
+        position: absolute;
+        left: -9999px;
+        }
+        hr {
+            display: block;
+            height: 1px;
+            width: 555px;
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 1em 0;
+            padding: 0;
+        }
+        #profile-image1 {
+        cursor: pointer;
+        width: 150px;
+        height: 150px;
+        border:2px solid #4470bd ;}
+        .tital{font-size:16px; font-weight:500;}
+        .bot-border{border-bottom:1px grey solid;  margin:5px 0  5px 0}
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Profile
+        </h1>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+            </li>
+            <li class="active">
+                <i class="fa fa-file"></i>  Users
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-8" align="left">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert" >
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{message}}
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+    </div>
+
+<!-- Modal Update Profile -->
+
+<div class="modal fade" id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Update Profile</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" action="/updateProfile/" id="my_form">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input class="form-control" name="id" type="text" id ="AID" value="" readonly >
+                        </div>
+                        <div class="form-group">
+                                <label>First Name</label>
+                                <input class="form-control" name="fname" type="text" id ="Afname">  
+                        </div>
+                        <div class="form-group">
+                                <label>Last Name</label>
+                                <input class="form-control" name="lname" type="text" id ="Alname"> 
+
+                        </div>
+                        <div class="form-group">
+                                <label>E-mail</label>
+                                <input class="form-control" name="email" type="text" id ="Aemail" readonly> 
+
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="password" class="control-label">Password</label>
+                            <input class="form-control" id="password" type="password" placeholder="Enter Password" 
+                                    name="password" data-minLength="5"
+                                    data-error="some error"
+                                    required/>
+                                <span class="glyphicon form-control-feedback"></span>
+                                <span class="help-block with-errors"></span>
+                        </div>
+
+                        <div class="form-group has-feedback">
+                                <label for="confirmPassword"  class="control-label">Confirm Password</label>
+                                <input class="form-control {$borderColor}" id="confirmPassword" type="password" placeholder="Re-type password" 
+                                        name="confirmPassword" data-match="#confirmPassword" data-minLength="5"
+                                        data-match-error="some error 2"
+                                        required/>
+                                    <span class="glyphicon form-control-feedback"></span>
+                                    <span class="help-block with-errors"></span>
+                            </div>
+                <div class="modal-footer ">
+                <button type="submit" id ="update" class="btn btn-primary btn-default btn-block" value="update">Update</button>
+                </div>
+            </form>
+        </div>
+            </div>
+        <!-- /.modal-dialog --> 
+        </div>
+    <!-- /.modal-dialog --> 
+    </div>
+</div>
+
+<div class="row">
+    </br>
+</div>
+
+<!-- view user profile -->
+<div class="container">    
+        <div class="row">
+            <div class="panel panel-default">
+            <div class="panel-heading"><h4>User Profile</h4></div>
+             <div class="panel-body">
+            <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
+                <div align="center"><img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> 
+                </div>
+                <input id="profile-image-upload" class="hidden" type="file">
+                <div style="color:#999;"><br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp click here to change your profile image</br></div>
+            </div>
+
+            <div class="col-md-8 col-xs-12 col-sm-6 col-lg-8" >
+                <div class="container" >
+                  <h2>
+                    {% if session.logged_in %}
+                        <label type="text">{{fname+lname}}</label>
+                    {% endif %}    
+                    </h2>
+                </div>
+                 <hr>
+                <ul class="container details" >
+                  <li><p><span class="glyphicon glyphicon-user one" style="width:50px;"></span>First Name:
+                    {% if session.logged_in %}
+                        <label type="text">{{fname}}</label>
+                    {% endif %} 
+                    </p></li>
+                  <li><p><span class="glyphicon glyphicon-user one" style="width:50px;"></span>Last Name:
+                    {% if session.logged_in %}
+                    <label type="text">{{lname}}</label>
+                    {% endif %}
+                    </p></li> 
+                  <li><p><span class="glyphicon glyphicon-envelope one" style="width:50px;"></span>
+                    {% if session.logged_in %}
+                    <label type="text">{{email}}</label>
+                    {% endif %}
+                    </p></li>
+                </ul>
+                <hr>
+                <div class="col-sm-9"> 
+                    <!-- 4/9 btn-block/ms -->
+                        <button type="button" class="open-AddBookDialog btn btn-primary btn-block" data-title="Edit" data-toggle="modal" 
+                        data-id="{{ID}}" data-fname="{{fname}}" data-lname="{{lname}}" data-email="{{email}}"
+                        data-target="#edit"  href="#edit">
+                          <i class="fa fa-plus">Edit Profile</i>
+                        </button>
+                </div>
+            </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
