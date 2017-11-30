@@ -399,23 +399,25 @@ def post_issue():
 # List all the Issues
 @app.route('/api/get_issue', methods = ['GET'])
 def getIssueList():
+	print 'TEST: Inside get_issue Route.'
+	error = None
+	if request.method == 'GET':
+		issues =  Issues.query.all()
+		issues_output    =  []
+		if issues:
+			for issue in issues:
+				issues_output.append(dict(Issue_id = issue.Issue_id, Iuid = issue.Iuid, Icategory_id = issue.Icategory_id, 
+				Istatus_id = issue.Istatus_id, Ipicpath = issue.Ipicpath, Idescription = issue.Idescription, Itime = issue.Itime, Ilat = issue.Ilat, Ilon = issue.Ilon,
+				IassignedTo = issue.IassignedTo ))
+	
+			message = 'All issues sent successfully!'
+			status_code = 200
+		else:
+			message = 'Error occured'
+			status_code = 400
+	return jsonify({'message':message,'status_code':status_code,'issues':issues_output})
 
-    print 'TEST: Inside post_issue route.'
-    error = None
-    output = []
-    status_code = 400
 
-    try:
-        if request.method == 'GET':
-            issueData = Issues.query.all()
-            print issueData
-            status_code = 200
-
-    except Exception as e:
-        print e
-
-
-    return jsonify({'result' : output, 'status_code' : status_code})
 
 
 # LOGS
