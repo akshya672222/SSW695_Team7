@@ -49,6 +49,44 @@ def login():
 			status_code = 400
 	return jsonify({'message':message,'status_code':status_code,'result' : output, 'categories':categories_output,'priorities':priorities_output})
 
+@app.route('/api/get_categories', methods=['GET'])
+def get_categories():
+    print 'TEST: Inside get_categories Route.'
+    error = None
+    if request.method == 'GET':
+        categories =  Category.query.all()
+        categories_output    =  []
+        if categories:
+            for cat in categories:
+                categories_output.append(dict(Category_name = cat.Category_name, Category_id = cat.Category_id, Category_status  = cat.Category_status))
+    
+            message = 'All categories sent successfully!'
+            status_code = 200
+        else:
+            message = 'Error occured'
+            status_code = 400
+    return jsonify({'message':message,'status_code':status_code,'categories':categories_output})
+
+@app.route('/api/get_priorities', methods=['GET'])
+def get_priorities():
+    print 'TEST: Inside get_priorities Route.'
+    error = None
+    if request.method == 'GET':
+        priorities =    Priority.query.all()
+        priorities_output    =  []
+
+        if priorities:
+            for pr in priorities:
+                priorities_output.append(dict(Priority_name = pr.Priority_name, Priority_id = pr.Priority_id, Priority_status  = pr.Priority_status))
+            
+            message = 'All priorities sent successfully!'
+            status_code = 200
+        else:
+            message = 'Error occured'
+            status_code = 400
+    return jsonify({'message':message,'status_code':status_code,'priorities':priorities_output})
+
+
 
 # Register Route
 @app.route('/api/register', methods = ['POST'])
@@ -304,110 +342,28 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-# Add Issue / Post Issue
-@app.route('/api/post_issue', methods = ['POST'])
-def post_issue():
-        print 'TEST: Inside post_issue route.'
-        error = None
-        output = []
-        status_code = 400
-
-        try:
-            if request.method == 'POST':
-                print 'TEST: Inside POST Block for post_issue.'
-                
-                user_id                 = request.form['user_id']            
-                issue_lat               = request.form['issue_lat']
-                issue_long              = request.form['issue_long']
-                issue_time              = request.form['issue_time']
-                issue_description       = request.form['issue_description']
-                issue_category_id       = request.form['issue_category_id']
-                issue_priority          = request.form['issue_priority']
-
-                output = []
-                if 'file' not in request.files:
-                    output = 'No file part'
-                image = request.files['file']
-
-                # Check if the user has selected any image
-                if image.filename == '':
-                    output = 'No image selected'
-
-                if image and allowed_file(image.filename.lower()):
-                    filename = secure_filename(image.filename)
-                    #issue_picture_name = image.filename
-
-                    user_data       = Users.query.filter_by(UID = user_id).first()
-                    user_name_id    = "".join(user_data.Fname + str(user_data.UID))
-                            
-                    # Use os.makedirs(folder_location) for creating user related folders
-                    folder_location = app.config['UPLOAD_FOLDER'] + '/' + user_name_id
-                    os.makedirs(folder_location)
-                    issue_picpath   = folder_location + '/' + image.filename
-
-                    image.save(os.path.join(folder_location, filename)) 
-                    new_issue = Issues(Iuid = user_id, Ilat = issue_lat, Ilon = issue_long, Itime = issue_time, Idescription = issue_description, Icategory_id = issue_category_id, Ipriority = issue_priority, Ipicpath = issue_picpath)
-                    db.session.add(new_issue)
-                    db.session.commit()
-                    output          = 'Issue posted successfully.'
-                    status_code     = 200
-        except Exception as e:
-            print 'EXCEPTION:',e
-        return jsonify({'result' : output, 'status_code' : status_code})
-
-# Update Issue
-@app.route('/api/updateIssue', methods = ['POST'])
-def updateIssue():
-    print 'TEST: Inside updateIssue route.'
-    error = None
-
-    if request.method == 'POST':
-        print 'TEST: Inside PUT block for updateIssue route.'
-        issue_id = request.json['issue_id']
-
-        output = []
-
-        checkIssue = Issues.query.filter_by(Issue_id = issue_id).first()
-
-        # If issue-id is already present then only add status
-        if checkIssue:
-            issue_status     = request.json['status']
-            update_time      = request.json['status_updateTime']
-            updated_by       = request.json['status_updatedBy']
-
-            new_status = Status(SIssue_id = issue_id, Status = issue_status, Status_updateTime = update_time, Status_updatedBy = updated_by)
-            db.session.add(new_status)
-            db.session.commit()
-
-            output          = 'Status added for Issue-', issue_id
-            status_code     = 200
-        else:
-            status_code     = 400
-            output          = 'Status not added as Issue is not present.'
-
-
-    return jsonify({'result' : output, 'status_code' : status_code})
-
-# List all the Issues
-@app.route('/api/get_issue', methods = ['GET'])
-def getIssueList():
-
-    print 'TEST: Inside post_issue route.'
-    error = None
-    output = []
-    status_code = 400
-
+# Post Issue route
+@app.route('/api/post_issue', methods=['POST'])
+def upload_image():
+    output = "hello error"
     try:
-        if request.method == 'GET':
-            issueData = Issues.query.all()
-            print issueData
-            status_code = 200
-
-    except Exception as e:
-        print e
-
-
-    return jsonify({'result' : output, 'status_code' : status_code})
+        print 'Inside POST ISSUE Block.'
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                print 'No file part'
+            image = request.files['file']
+            # if user does not select file, browser also
+            # submit a empty part without filename
+            if image.filename == '':
+                print 'No selected file'
+            if image and allowed_file(image.filename.lower()):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                output = 'Executed'
+    except Exception as error:
+        output = str(error)
+    return output
 
 # LOGS
 @app.route('/api/logs', methods = ['GET'])
@@ -482,11 +438,11 @@ def forgot_password():
 				db.session.commit()
 				message = 'User token successfully updated and email sent to user'
 				status_code = 200
-				url = 'http://ec2-52-37-224-72.us-west-2.compute.amazonaws.com/api/reset_password/'+number
+				url = 'http://ec2-34-207-75-73.compute-1.amazonaws.com/api/reset_password/'+number
 				email_body = "Click below link to reset your password.\n\n\n" + url
-				connection = boto.ses.connect_to_region('us-west-2', aws_access_key_id='AKIAJN4MYUQTGOXF2TTA',
-                                                    aws_secret_access_key='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')
-				connection.send_email ('akshya672222@gmail.com' , 'Reset Password' , email_body ,[ email ] )
+				connection = boto.ses.connect_to_region('us-east-1', aws_access_key_id='AKIAIEF6EBRCRTIUCUCQ',
+                                                    aws_secret_access_key='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')
+				connection.send_email ('spatil14@stevens.edu' , 'Reset Password' , email_body ,[ email ] )
 		else:
 			message = 'User does not exist'
 			status_code = 400
