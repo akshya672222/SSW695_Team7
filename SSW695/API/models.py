@@ -8,10 +8,10 @@ class Users(db.Model):
     Lname    =  db.Column('user_lname', db.Unicode)
     Email    =  db.Column('user_email', db.Unicode)
     Password =  db.Column('user_password', db.Unicode)
-    Status   =  db.Column('user_status', db.Unicode)
+    Status   =  db.Column('user_status', db.Integer)
     Token    =  db.Column('user_token', db.Unicode)
-    user_type    =  db.Column('user_type', db.Unicode)
-    Category     =  db.Column('user_category', db.Unicode)
+    user_type    =  db.Column('user_type', db.Integer)
+    Category     =  db.Column('user_category', db.Integer)
 
     
 class Priority(db.Model):
@@ -19,7 +19,7 @@ class Priority(db.Model):
     __table_args__ = {'extend_existing': True}
     Priority_id         = db.Column('priority_id', db.Integer, primary_key = True)
     Priority_name       = db.Column('priority_name', db.Unicode)
-    Priority_status     = db.Column('priority_status', db.Unicode)
+    Priority_status     = db.Column('priority_status', db.Integer)
 
 class Category(db.Model):
     _tablename_ = 'Category'
@@ -27,7 +27,7 @@ class Category(db.Model):
 
     Category_id             = db.Column('category_id', db.Integer, primary_key = True)
     Category_name           = db.Column('category_name', db.Unicode)
-    Category_status         = db.Column('category_status', db.Unicode)
+    Category_status         = db.Column('category_status', db.Integer)
 
 
 class Notification(db.Model):
@@ -44,10 +44,10 @@ class Issues(db.Model):
 
     Issue_id        = db.Column('issue_id', db.Integer, primary_key = True)
     Iuid            = db.Column('user_id', db.Integer)
-    Icategory_id    = db.Column('issue_category_id', db.Integer)
+    Icategory_id    = db.Column('issue_category_id', db.Integer) # Change this
     Istatus_id      = db.Column('status_id', db.Integer)
     Ipicpath        = db.Column('issue_picpath', db.Unicode)
-    Ipriority       = db.Column('issue_priority_id', db.Integer)
+    Ipriority       = db.Column('issue_priority_id', db.Integer) # Change this
     Idescription    = db.Column('issue_description', db.Integer)
     Itime           = db.Column('issue_time', db.Unicode)
     Ilat            = db.Column('issue_lat', db.Float)
@@ -59,8 +59,7 @@ class Status(db.Model):
     __table_args__ = {'extend_existing': True} 
 
     Status_id               = db.Column('status_id', db.Integer, primary_key = True)
-    SIssue_id               = db.Column('issue_id', db.Unicode)
+    SIssue_id               = db.Column('issue_id', db.Integer)
     Status                  = db.Column('status', db.Integer)
     Status_updateTime       = db.Column('status_updateTime', db.Unicode)
     Status_updatedby        = db.Column('status_updatedby', db.Integer)
-    Category_status         = db.Column('category_status', db.Unicode)
