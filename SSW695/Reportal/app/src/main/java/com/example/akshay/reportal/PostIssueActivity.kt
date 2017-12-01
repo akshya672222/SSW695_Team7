@@ -25,16 +25,17 @@ import android.graphics.drawable.Drawable
 import android.graphics.BitmapFactory
 import android.R.attr.data
 import java.io.FileNotFoundException
-
-
+import java.nio.file.Files.write
+import android.app.PendingIntent.getActivity
+import android.support.v7.app.AlertDialog
 
 
 class PostIssueActivity : AppCompatActivity() {
 
-    val CAMERA_REQUEST_CODE =0
-    val GALLERY_REQUEST_CODE = 1
+    val CAMERA_REQUEST_CODE =0  //Request code when accessing camera for picture (permission granted)
+    val GALLERY_REQUEST_CODE = 1    //Request code when accessing gallery for picture (permission granted)
     val MY_PERMISSIONS_REQUEST_CAMERA =0
-    val MY_REQUEST_CAMERA = 10
+    val MY_REQUEST_CAMERA = 10      //Request code for camera permission from user
     val MY_REQUEST_WRITE_CAMERA = 11
     val CAPTURE_CAMERA = 12
 
@@ -43,33 +44,126 @@ class PostIssueActivity : AppCompatActivity() {
     val MY_REQUEST_GALLERY = 15
 
     var fileCamera: File? = null
+    var imageCapturedBitmap : Bitmap? = null
+    /*
+    override fun onStart() {
+        super.onStart()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), GALLERY_REQUEST_CODE)
+        } else {
+            write()
+        }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        setContentView(R.layout.activity_post_issue)
- //       val intent = Intent(this, MainActivity::class.java)
-        buttonCamera.setOnClickListener {
-           // checkPermissionCamera()
-
-            val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-            if(callCameraIntent.resolveActivity(packageManager) != null){
-                startActivityForResult(callCameraIntent,CAMERA_REQUEST_CODE)
+        var newString: String
+        if (savedInstanceState == null) {
+            println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in first if")
+            val extras = intent.extras
+            if (extras == null) {
+                println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in if with extras")
+                newString = ""
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ newString)
+            } else {
+                println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in else with extras")
+                newString = extras.getString("categoriesArray")
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ newString)
             }
+        } else {
+            println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in last else of first if")
+            newString = savedInstanceState.getSerializable("categoriesArray") as String
+            println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ newString)
         }
- //       val intentToHistory = Intent(this, historyActivity::class.java)
-        buttonGallery.setOnClickListener {
-            //checkPermissionGallery()
 
-            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+
+        setContentView(R.layout.activity_post_issue)
+        buttonCamera.setOnClickListener {
+
+            val permission = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)
+
+            if (permission == PackageManager.PERMISSION_GRANTED){
+                println("came here............Aks")
+                val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+                if(callCameraIntent.resolveActivity(packageManager) != null){
+                    startActivityForResult(callCameraIntent,CAMERA_REQUEST_CODE)
+                }
+            }else{
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
+
+                    println("In rational request block!!!!")
+                    val someValue = Manifest.permission.CAMERA
+                    var permissionList = Array<String>(1){someValue}
+                    ActivityCompat.requestPermissions(this, permissionList,MY_REQUEST_CAMERA)
+
+
+                }else{
+                    println("in ration request else block!!!!!!!!!!!")
+                    val alertDialog = AlertDialog.Builder(this ).create()
+                    alertDialog.setTitle("Permission Required!")
+                    alertDialog.setMessage("This application requires camera to capture image of the issues.\n" +
+                            "For that we need camera permission.\n" +
+                            "You can enable the camera permissions by following the steps:\n" +
+                            "Settings-> Permissions-> Reportal-> Enable")
+
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                        dialogInterface, i ->
+                    })
+                    alertDialog.show()
+
+//                    val someValue = Manifest.permission.CAMERA
+//                    var permissionList = Array<String>(1){someValue}
+//                    ActivityCompat.requestPermissions(this, permissionList,MY_REQUEST_CAMERA)
+                }
+            }
+
+        }
+        buttonGallery.setOnClickListener {
+
+            val photoPickerIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+            //val permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+            //val photoPickerIntent = Intent(Intent.ACTION_PICK)
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, GALLERY_REQUEST_CODE)
         }
         adddescriptionbtn.setOnClickListener {
-            val intent = Intent(applicationContext, PreviewSubmission::class.java)
-            startActivity(intent)
+            if (capturedImageView.drawable == null){
+                val alertDialog = AlertDialog.Builder(this ).create()
+                alertDialog.setTitle("Issue image!")
+                alertDialog.setMessage("Please select a image to attach with issue!!")
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
+                    dialogInterface, i ->
+                })
+                alertDialog.show()
+            }else{
+                val intent = Intent(applicationContext, PreviewSubmission::class.java)
+                intent.putExtra("image", imageCapturedBitmap)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            MY_REQUEST_CAMERA->{
+                if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+                    if(callCameraIntent.resolveActivity(packageManager) != null){
+                        startActivityForResult(callCameraIntent,CAMERA_REQUEST_CODE)
+                    }
+                }
+            }
+            else ->{
+
+            }
         }
     }
 
@@ -87,20 +181,28 @@ class PostIssueActivity : AppCompatActivity() {
                 println("activity!!!!!!!!!!!! " + Activity.RESULT_OK)
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     println("iN BITMAP CODE")
-                    capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
+                    if(capturedImageView.drawable == null){
+                        println("image not present in view!!!")
+                    }else{
+                        println("image present over write it!!!")
+                    }
+                    imageCapturedBitmap = data.extras.get("data") as Bitmap
+                    capturedImageView.setImageBitmap(imageCapturedBitmap)
                     //capturedImageView.setImageDrawable(data.extras.get("data") as Drawable)
                 }
             }
             GALLERY_REQUEST_CODE -> {
                 print("Im in the gallery!")
 
-                if (resultCode === Activity.RESULT_OK) {
+                if (resultCode === Activity.RESULT_OK && data != null) {
                     try {
                         print("in try block: "+data)
-//                        val imageUri = data.getData()
-//                        val imageStream = contentResolver.openInputStream(imageUri)
-//                        val selectedImage = BitmapFactory.decodeStream(imageStream)
-//                        capturedImageView.setImageBitmap(selectedImage)
+                        val imageUri = data?.getData()
+                        val imageStream = contentResolver.openInputStream(imageUri)
+                        val selectedImage = BitmapFactory.decodeStream(imageStream)
+                        imageCapturedBitmap = selectedImage
+                        capturedImageView.setImageBitmap(selectedImage)
+                        //capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
                     } catch (e: FileNotFoundException) {
                         println("In catch of gallery!")
                         e.printStackTrace()

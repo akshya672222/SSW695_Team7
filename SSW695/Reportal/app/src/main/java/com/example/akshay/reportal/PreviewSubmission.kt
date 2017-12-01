@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_preview_submission.*
 import android.content.Intent
+import android.graphics.Bitmap
 import android.support.v7.app.AlertDialog
 import android.view.WindowManager
 import android.widget.Spinner
@@ -19,7 +20,10 @@ class PreviewSubmission : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview_submission)
         buttonPost.setText("POST")
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+        val extra = intent.extras["image"] as Bitmap
+        imageViewPreviewPostIssue.setImageBitmap(extra)
 
         buttonPost.setOnClickListener {
 

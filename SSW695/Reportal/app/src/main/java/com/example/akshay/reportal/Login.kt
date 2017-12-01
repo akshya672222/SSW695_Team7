@@ -267,9 +267,13 @@ class Login : AppCompatActivity() {
                             val categories = resultJsonBlock.get("categories").toString()
                             val priorities = resultJsonBlock.get("priorities").toString()
                             val result = resultJsonBlock.get("result").toString()
-                            System.out.println(categories)
-                            System.out.println(priorities)
-                            System.out.println(result)
+                            intent.putExtra("categoriesArray",categories)
+                            intent.putExtra("prioritiesArray",priorities)
+                            intent.putExtra("resultArray",result)
+                            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+categories)
+                            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+priorities)
+                            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+result)
+
                             val intent = Intent(applicationContext, Homepage::class.java)
 
                             startActivity(intent)

@@ -110,7 +110,7 @@ class Feed : AppCompatActivity() {
         var reader: BufferedReader? = null
 
         try {
-            val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/register")
+            val url = URL("http://ec2-34-207-75-73.compute-1.amazonaws.com/api/getissue")
 
             connection = url.openConnection() as HttpURLConnection
             connection!!.connect()
