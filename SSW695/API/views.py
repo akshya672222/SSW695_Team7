@@ -396,6 +396,58 @@ def post_issue():
             print 'EXCEPTION:',e
         return jsonify({'result' : output, 'status_code' : status_code})
 
+# Update Issue
+@app.route('/api/update_issue', methods = ['POST'])
+def updateIssue():
+    print 'TEST: Inside update_issue route.'
+    error = None
+    output = []
+    status_code = 400
+    
+    try:
+        if request.method == 'POST':
+            print 'TEST: Inside POST Block for update_issue.'
+            issue_id            = request.json['issue_id']
+            issue_status        = request.json['issue_status']
+            issue_assignedTo    = request.json['issue_assignedTo']
+            issue_updateTime    = request.json['issue_updateTime']
+            issue_updatedBy     = request.json['issue_updatedBy']
+
+            # Check if Issue is already present in Status table
+            checkIssue = Status.query.filter_by(SIssue_id = issue_id).first()
+            
+            # Update record in Status table if issue already present
+            if checkIssue:
+
+                checkIssue.Status            = issue_status
+                checkIssue.Status_updateTime = issue_updateTime
+                checkIssue.Status_updatedby  = issue_updatedBy
+                db.session.commit()
+                output.append(dict(Msg = 'Status for Issue-id ' + str(issue_id) + ' updated successfully.'))
+                status_code = 200
+            
+            # Insert new record in Status table
+            else:
+
+                new_status_issue = Status(SIssue_id = issue_id, Status = issue_status, Status_updateTime = issue_updateTime, Status_updatedBy = issue_updatedBy)
+                db.session.add(new_status_issue)
+                db.session.commit()
+
+                # Update below fields in Issue's table
+                fetchStatus = Status.query.filter_by(SIssue_id = issue_id).first()
+                updateIssue = Issues.query.filter_by(Issue_id = issue_id).first()
+
+                updateIssue.Istatus_id  = fetchStatus.Status_id
+                updateIssue.IassignedTo = issue_assignedTo
+                db.session.commit()
+                output.append(dict(Msg = 'Status for Issue-id ' + str(issue_id) + ' added successfully.'))
+                status_code = 200
+
+    except Exception as e:
+        print e
+    return jsonify({'result' : output, 'status_code' : status_code})
+
+
 # List all the Issues
 @app.route('/api/get_issue', methods = ['GET'])
 def getIssueList():
