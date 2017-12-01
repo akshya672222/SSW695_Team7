@@ -69,6 +69,7 @@ def login():
         if response_json['status_code'] == 200: #if response is successful
             session['logged_in'] = True
             session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
+            session['id'] = response_json['result'][0]['UserID']
             return redirect(url_for("dashboard"))
         else:
             error = str(response_json['message'])
@@ -82,6 +83,24 @@ def logout():
     session.clear()
     flash("You have been logged out!")
     return redirect(url_for('login'))
+
+
+
+#display profile
+@app.route('/profile/')
+@login_required
+def profile():
+    #Fetch admin info from database 
+    url_get_people_list = api_url + 'get_user/' + str(session['id'])
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        return render_template("profile.html", rows = response_json['result'])  
+    else:
+        flash(message)
+        return redirect(url_for('profile'))
+
 
 #display users
 @app.route('/users/')

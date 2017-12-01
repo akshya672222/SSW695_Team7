@@ -2,8 +2,7 @@ from reportal import db
 
 class Users(db.Model):
     __tablename__ = 'Users'
-    __table_args__ = {'extend_existing': True} 
-
+    __table_args__ = {'extend_existing': True}
     UID      =  db.Column('user_id', db.Integer, primary_key = True)
     Fname    =  db.Column('user_fname', db.Unicode)
     Lname    =  db.Column('user_lname', db.Unicode)
@@ -33,8 +32,7 @@ class Category(db.Model):
 
 class Notification(db.Model):
     _tablename_ = 'Notification'
-    __table_args__ = {'extend_existing': True} 
-
+    __table_args__ = {'extend_existing': True}
     User_id                     = db.Column('user_id', db.Integer)
     Notification_id             = db.Column('notification_id', db.Integer, primary_key = True)
     Notification_title          = db.Column('notification_title', db.Unicode)

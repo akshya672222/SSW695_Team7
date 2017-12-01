@@ -250,38 +250,38 @@
             <div class="col-md-8 col-xs-12 col-sm-6 col-lg-8" >
                 <div class="container" >
                   <h2>
-                    {% if session.logged_in %}
-                        <label type="text">{{fname+lname}}</label>
-                    {% endif %}    
+                        {% for row in rows %}
+                        <label type="text">{{row["user_fname"]+row["user_lname"]}}</label>
+  
                     </h2>
                 </div>
                  <hr>
                 <ul class="container details" >
                   <li><p><span class="glyphicon glyphicon-user one" style="width:50px;"></span>First Name:
-                    {% if session.logged_in %}
-                        <label type="text">{{fname}}</label>
-                    {% endif %} 
+
+                        <label type="text">{{row["user_fname"]}}</label>
+
                     </p></li>
                   <li><p><span class="glyphicon glyphicon-user one" style="width:50px;"></span>Last Name:
-                    {% if session.logged_in %}
-                    <label type="text">{{lname}}</label>
-                    {% endif %}
+
+                    <label type="text">{{row["user_lname"]}}</label>
+
                     </p></li> 
                   <li><p><span class="glyphicon glyphicon-envelope one" style="width:50px;"></span>
-                    {% if session.logged_in %}
-                    <label type="text">{{email}}</label>
-                    {% endif %}
+
+                    <label type="text">{{row["user_email"]}}</label>
                     </p></li>
                 </ul>
                 <hr>
                 <div class="col-sm-9"> 
                     <!-- 4/9 btn-block/ms -->
                         <button type="button" class="open-AddBookDialog btn btn-primary btn-block" data-title="Edit" data-toggle="modal" 
-                        data-id="{{ID}}" data-fname="{{fname}}" data-lname="{{lname}}" data-email="{{email}}"
+                        data-id="{{row['user_id']}}" data-fname="{{row['user_fname']}}" data-lname="{{row['user_lname']}}" data-email="{{row['user_email']}}"
                         data-target="#edit"  href="#edit">
                           <i class="fa fa-plus">Edit Profile</i>
                         </button>
                 </div>
+                {% endfor %}
             </div>
       </div>
   </div>
