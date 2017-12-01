@@ -2,11 +2,11 @@
 from flask import request, jsonify, session
 from reportal import app, db
 from sqlalchemy import *
-from sqlalchemy_pagination import paginate
+#from sqlalchemy_pagination import paginate
 
 
 # Instead of Users table, all other DB tables can also be imported as and when required
-from models import Users, Priority, Category,Notification
+from models import Users, Priority, Category,Notification, Issues, Status
 from werkzeug.utils import secure_filename
 import os
 import boto.ses
