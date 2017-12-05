@@ -66,9 +66,6 @@
                 },             
         password: {
                 validators: {
-                    notEmpty: {
-                            message: 'Please supply your password'
-                        },
                     stringLength: {
                             min: 8,
                         },
@@ -80,9 +77,6 @@
             },
             confirmPassword: {
                 validators: {
-                    notEmpty: {
-                            message: 'Please supply your password'
-                        },
                     stringLength: {
                             min: 8,
                         },
@@ -204,7 +198,7 @@
                             <input class="form-control" id="password" type="password" placeholder="Enter Password" 
                                     name="password" data-minLength="5"
                                     data-error="some error"
-                                    required/>
+                                    />
                                 <span class="glyphicon form-control-feedback"></span>
                                 <span class="help-block with-errors"></span>
                         </div>
@@ -214,7 +208,7 @@
                                 <input class="form-control {$borderColor}" id="confirmPassword" type="password" placeholder="Re-type password" 
                                         name="confirmPassword" data-match="#confirmPassword" data-minLength="5"
                                         data-match-error="some error 2"
-                                        required/>
+                                        />
                                     <span class="glyphicon form-control-feedback"></span>
                                     <span class="help-block with-errors"></span>
                             </div>
