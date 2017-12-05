@@ -22,12 +22,16 @@
      var Alname = $(this).data('lname');
      var Aemail= $(this).data('email');
      var password = $(this).data('password');
+     var confirmPassword = $(this).data('password');
+     
 
      $(".modal-body #AID").val( Aid );
      $(".modal-body #Afname").val( Afname );
      $(".modal-body #Alname").val( Alname );
      $(".modal-body #Aemail").val( Aemail );
      $(".modal-body #password").val( password );
+     $(".modal-body #confirmPassword").val( confirmPassword );
+     
 });
 
      $(function() {
@@ -50,7 +54,7 @@
                             min: 2,
                         },
                             notEmpty: {
-                            message: 'Please supply your first name'
+                            message: 'Please fill your first name'
                         }
                     }
                 },
@@ -60,14 +64,14 @@
                             min: 2,
                         },
                         notEmpty: {
-                            message: 'Please supply your last name'
+                            message: 'Please fill your last name'
                         }
                     }
                 },             
         password: {
                 validators: {
                     stringLength: {
-                            min: 8,
+                            min: 5,
                         },
                     identical: {
                         field: 'confirmPassword',
@@ -78,7 +82,7 @@
             confirmPassword: {
                 validators: {
                     stringLength: {
-                            min: 8,
+                            min: 5,
                         },
                     identical: {
                         field: 'password',
@@ -197,8 +201,7 @@
                             <label for="password" class="control-label">Password</label>
                             <input class="form-control" id="password" type="password" placeholder="Enter Password" 
                                     name="password" data-minLength="5"
-                                    data-error="some error"
-                                    />
+                                    data-error="some error">
                                 <span class="glyphicon form-control-feedback"></span>
                                 <span class="help-block with-errors"></span>
                         </div>
@@ -207,8 +210,7 @@
                                 <label for="confirmPassword"  class="control-label">Confirm Password</label>
                                 <input class="form-control {$borderColor}" id="confirmPassword" type="password" placeholder="Re-type password" 
                                         name="confirmPassword" data-match="#confirmPassword" data-minLength="5"
-                                        data-match-error="some error 2"
-                                        />
+                                        data-match-error="some error 2">
                                     <span class="glyphicon form-control-feedback"></span>
                                     <span class="help-block with-errors"></span>
                             </div>
@@ -271,6 +273,7 @@
                     <!-- 4/9 btn-block/ms -->
                         <button type="button" class="open-AddBookDialog btn btn-primary btn-block" data-title="Edit" data-toggle="modal" 
                         data-id="{{row['user_id']}}" data-fname="{{row['user_fname']}}" data-lname="{{row['user_lname']}}" data-email="{{row['user_email']}}"
+                        data-password="{{row['password']}}" data-confirmPassword="{{row['password']}}"
                         data-target="#edit"  href="#edit">
                           <i class="fa fa-plus">Edit Profile</i>
                         </button>
