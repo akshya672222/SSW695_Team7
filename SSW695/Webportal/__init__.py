@@ -101,6 +101,31 @@ def profile():
         flash(message)
         return redirect(url_for('profile'))
 
+#Update profile
+@app.route('/updateProfile/',methods=["POST"])
+@login_required
+def updateProfile():
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'update_user_settings'
+            payload = {'firstname': request.form['fname'], 'lastname': request.form['lname'], 'password': request.form['password'], 'email': request.form['email'], 'user_id':session['id']}
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+                message = 'Profile Updated successfuly!'
+            else:
+                message = response_json['message']
+            flash(message)
+            return redirect(url_for('profile'))
+        
+    except Exception as e:
+        print(e)
+        return render_template("404.html")  
+    return redirect(url_for('profile'))
+
 
 #display users
 @app.route('/users/')
