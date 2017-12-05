@@ -18,57 +18,61 @@ class PreviewSubmission : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!!!!! Im in preview Submission")
         setContentView(R.layout.activity_preview_submission)
         buttonPost.setText("POST")
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
+        println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!!!!! 1")
         val extra = intent.extras["image"] as Bitmap
+        println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!!!!! 2")
         imageViewPreviewPostIssue.setImageBitmap(extra)
-
+        println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!!!!! 3")
         buttonPost.setOnClickListener {
+            println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ in onclick")
 
             val alertDialog = AlertDialog.Builder(this ).create()
             val title: String = textViewTitle.text.toString()
             val description: String = textViewDescription.text.toString()
+            val location: String = textViewLocation.text.toString()
             val categorySelected: String = category.selectedItem.toString ()
             val prioritySelected: String = priority.selectedItem.toString ()
 
             if(title.isEmpty()){
                 alertDialog.setTitle("Error!")
                 alertDialog.setMessage("Please enter Title!")
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
-                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
-                })
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", { dialogInterface, i ->})
                 alertDialog.show()
             }
             else if(description.isEmpty()){
                 alertDialog.setTitle("Error!")
                 alertDialog.setMessage("Please enter Description!")
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
-                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
-                })
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {dialogInterface, i ->})
+                alertDialog.show()
+            }
+            else if(location.isEmpty()){
+                alertDialog.setTitle("Error!")
+                alertDialog.setMessage("Please enter Location!")
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {dialogInterface, i ->})
                 alertDialog.show()
             }
             else if(categorySelected.isEmpty()){
                 alertDialog.setTitle("Error!")
                 alertDialog.setMessage("Please select a category!")
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
-                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
-                })
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {dialogInterface, i ->})
                 alertDialog.show()
             }
             else if(prioritySelected == ""){
                 alertDialog.setTitle("Error!")
                 alertDialog.setMessage("Please select a priority")
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {
-                    dialogInterface, i -> Toast.makeText(applicationContext, "Please fill empty fields", Toast.LENGTH_LONG).show()
-                })
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", {dialogInterface, i ->})
                 alertDialog.show()
             }
             else {
                 Toast.makeText(this, "Post Submitted", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, Homepage::class.java)
                 startActivity(intent)
+
             }
 
         }

@@ -142,8 +142,10 @@ class PostIssueActivity : AppCompatActivity() {
                 })
                 alertDialog.show()
             }else{
+                println("IN on click!")
                 val intent = Intent(applicationContext, PreviewSubmission::class.java)
                 intent.putExtra("image", imageCapturedBitmap)
+                println("hELLO!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@")
                 startActivity(intent)
             }
         }
