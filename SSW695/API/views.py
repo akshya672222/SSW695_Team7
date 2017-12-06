@@ -297,7 +297,7 @@ def add_update_Category():
         error = None
         if request.method == 'POST':
                 print 'TEST: Inside POST block for Add Category.'
-                category_name = request.json['category_name']
+                category_name   = request.json['category_name']
                 category_status = request.json['category_status']
 
                 output = []
@@ -310,6 +310,7 @@ def add_update_Category():
                         new_category = Category(Category_name = category_name, Category_status = category_status)
                         db.session.add(new_category)
                         db.session.commit()
+                        
                         output.append(dict(Msg = 'Category added successfully.'))
                         status_code = 200
                 else:
@@ -338,12 +339,10 @@ def add_update_Category():
         return jsonify({'result' : output, 'status_code' : status_code})
 
 
+# Method for post_issue API to check name of file with the permitted extensions
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-
 
 # Add Issue / Post Issue
 @app.route('/api/post_issue', methods = ['POST'])
@@ -357,6 +356,7 @@ def post_issue():
             if request.method == 'POST':
                 print 'TEST: Inside POST Block for post_issue.'
                 
+                # Collect data from multipart-form
                 user_id                 = request.form['user_id']            
                 issue_lat               = request.form['issue_lat']
                 issue_long              = request.form['issue_long']
@@ -366,11 +366,13 @@ def post_issue():
                 issue_priority          = request.form['issue_priority']
 
                 output = []
+                
+                # Check if multipart-form for accepting files is present or not
                 if 'file' not in request.files:
                     output = 'No file part'
                 image = request.files['file']
 
-                # Check if the user has selected any image
+                # Check if the user has selected an image
                 if image.filename == '':
                     output = 'No image selected'
 
@@ -381,7 +383,7 @@ def post_issue():
                     user_data       = Users.query.filter_by(UID = user_id).first()
                     user_name_id    = "".join(user_data.Fname + str(user_data.UID))
                             
-                    # Use os.makedirs(folder_location) for creating user related folders
+                    # Create folder for storing image with respect to user-name & user-id 
                     folder_location = app.config['UPLOAD_FOLDER'] + '/' + user_name_id
                     os.makedirs(folder_location)
                     issue_picpath   = folder_location + '/' + image.filename
@@ -400,13 +402,15 @@ def post_issue():
 @app.route('/api/update_issue', methods = ['POST'])
 def updateIssue():
     print 'TEST: Inside update_issue route.'
-    error = None
-    output = []
+    error       = None
+    output      = []
     status_code = 400
     
     try:
         if request.method == 'POST':
             print 'TEST: Inside POST Block for update_issue.'
+
+            # Collect data from CMS in JSON
             issue_id            = request.json['issue_id']
             issue_status        = request.json['issue_status']
             issue_assignedTo    = request.json['issue_assignedTo']
@@ -432,11 +436,11 @@ def updateIssue():
                 new_status_issue = Status(SIssue_id = issue_id, Status = issue_status, Status_updateTime = issue_updateTime, Status_updatedBy = issue_updatedBy)
                 db.session.add(new_status_issue)
                 db.session.commit()
-
-                # Update below fields in Issue's table
+                
                 fetchStatus = Status.query.filter_by(SIssue_id = issue_id).first()
                 updateIssue = Issues.query.filter_by(Issue_id = issue_id).first()
 
+                # Update status_id, issue_assignedTo in Issues table
                 updateIssue.Istatus_id  = fetchStatus.Status_id
                 updateIssue.IassignedTo = issue_assignedTo
                 db.session.commit()
@@ -453,23 +457,50 @@ def updateIssue():
 def getIssueList():
 	print 'TEST: Inside get_issue Route.'
 	error = None
-	if request.method == 'GET':
-		issues =  Issues.query.all()
-		issues_output    =  []
+	
+    if request.method == 'GET':
+		issues        =  Issues.query.all()
+		issues_output =  []
 		if issues:
 			for issue in issues:
 				issues_output.append(dict(Issue_id = issue.Issue_id, Iuid = issue.Iuid, Icategory_id = issue.Icategory_id, 
 				Istatus_id = issue.Istatus_id, Ipicpath = issue.Ipicpath, Idescription = issue.Idescription, Itime = issue.Itime, Ilat = issue.Ilat, Ilon = issue.Ilon,
 				IassignedTo = issue.IassignedTo ))
 	
-			message = 'All issues sent successfully!'
+			message     = 'All issues sent successfully!'
 			status_code = 200
 		else:
-			message = 'Error occured'
+			message     = 'Error occured'
 			status_code = 400
 	return jsonify({'message':message,'status_code':status_code,'issues':issues_output})
 
+# List all the Issues specific to assigned person
+@app.route('/api/get_issue_list/<int:assignedToID>', methods = ['GET'])
+def getAssignedIssue(assignedToID):
+    print 'TEST: Inside get_issue_list Route.'
+    error = None
+    
+    if request.method == 'GET':
+        print 'TEST: Inside GET Block for get_issue_list Route.'
+        #assignedTo = request.json['issue_assignedTo']
 
+        assignedTo     = assignedToID
+        assignedIssues = Issues.query.filter_by(IassignedTo = assignedTo).all()
+        issues_output  = []
+
+        if assignedIssues:
+            for issue in assignedIssues:
+                issues_output.append(dict(Issue_id = issue.Issue_id, Iuid = issue.Iuid, Icategory_id = issue.Icategory_id, 
+                Istatus_id = issue.Istatus_id, Ipicpath = issue.Ipicpath, Idescription = issue.Idescription, Itime = issue.Itime, Ilat = issue.Ilat, Ilon = issue.Ilon,
+                IassignedTo = issue.IassignedTo ))
+
+            message     = 'Issues specific to ' + str(assignedTo) + ' are sent successfully.'
+            status_code = 200
+        else:
+            message     = 'Issues are not present for assigned-id ' + str(assignedTo)
+            status_code = 400
+
+    return jsonify({'message':message,'status_code':status_code,'issues':issues_output})
 
 
 # LOGS
