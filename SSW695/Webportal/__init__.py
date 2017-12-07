@@ -99,17 +99,27 @@ def logout():
     return redirect(url_for('login'))
 
 #forgot password
-@app.route('/forgotPassword/')
+@app.route('/')
 def resetPassword():
-    url_get_people_list = api_url + 'reset_password'
-    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST')
-    response = urllib2.urlopen(url_req).read().decode('utf8')
-    response_json = json.loads(response)
-    if response_json['status_code'] == 200:
-        return render_template("login.html")  
-    else:
-        flash("Please log in with your new password")
-        return redirect(url_for('login'))
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'forgot_password'
+            payload = {'email': request.form['email']}
+            print(payload)
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+                message = 'Please check your email!'
+            else:
+                message = response_json['message']
+            flash(message)
+            return redirect(url_for('login'))
+    except Exception as e:
+        return render_template("404.html")  
+    return redirect(url_for('login'))
 
 #display profile
 @app.route('/profile/')
