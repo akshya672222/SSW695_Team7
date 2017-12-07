@@ -53,7 +53,6 @@ def login_required(f):
         if ('logged_in' in session) and session['user_type'] == 3  :
             return f(*args, **kwargs)
         else:
-            flash("You dont have permission to access this page")
             
             return redirect(url_for('no_permission'))
     return wrap
@@ -134,11 +133,7 @@ def updateProfile():
     try:
         if request.method == "POST":
             url_get_people_list = api_url + 'update_user_settings'
-<<<<<<< HEAD
-            payload = {'firstname': request.form['fname'], 'lastname': request.form['lname'], 'password': request.form['password'], 'email': request.form['email'], 'user_id':session['id']}
-=======
             payload = {'firstname': request.form['fname'], 'lastname': request.form['lname'], 'password': request.form['password'], 'user_id': session['id'], 'email': request.form['email']}
->>>>>>> origin/master
             json_data = json.dumps(payload).encode('utf8')
             url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
             response = urllib2.urlopen(url_req).read().decode('utf8')
@@ -152,10 +147,6 @@ def updateProfile():
             return redirect(url_for('profile'))
         
     except Exception as e:
-<<<<<<< HEAD
-        print(e)
-=======
->>>>>>> origin/master
         return render_template("404.html")  
     return redirect(url_for('profile'))
 
