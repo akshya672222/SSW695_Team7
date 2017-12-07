@@ -99,7 +99,18 @@ def logout():
     flash("You have been logged out!")
     return redirect(url_for('login'))
 
-
+#forgot password
+@app.route('/forgotPassword/')
+def resetPassword():
+    url_get_people_list = api_url + 'reset_password'
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        return render_template("login.html")  
+    else:
+        flash("Please log in with your new password")
+        return redirect(url_for('login'))
 
 #display profile
 @app.route('/profile/')
@@ -123,7 +134,11 @@ def updateProfile():
     try:
         if request.method == "POST":
             url_get_people_list = api_url + 'update_user_settings'
+<<<<<<< HEAD
             payload = {'firstname': request.form['fname'], 'lastname': request.form['lname'], 'password': request.form['password'], 'email': request.form['email'], 'user_id':session['id']}
+=======
+            payload = {'firstname': request.form['fname'], 'lastname': request.form['lname'], 'password': request.form['password'], 'user_id': session['id'], 'email': request.form['email']}
+>>>>>>> origin/master
             json_data = json.dumps(payload).encode('utf8')
             url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
             response = urllib2.urlopen(url_req).read().decode('utf8')
@@ -137,7 +152,10 @@ def updateProfile():
             return redirect(url_for('profile'))
         
     except Exception as e:
+<<<<<<< HEAD
         print(e)
+=======
+>>>>>>> origin/master
         return render_template("404.html")  
     return redirect(url_for('profile'))
 
@@ -477,6 +495,9 @@ def maintenance():
 def dashboard():
     return render_template("dashboard.html")
 
+@app.route('/forgotPassword/')
+def forgotPassword():
+    return render_template("forgotPassword.html")
 
 
 @app.route('/blank-page/')
