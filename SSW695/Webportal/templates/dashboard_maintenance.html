@@ -210,8 +210,8 @@ function timeConverter(UNIX_timestamp){
                         <td>{{row["IassignedTo"]}}</td>
                         <td>{{row["Idescription"]}}</td>
                         <td>{{row["Icategory_id"]}}</td>
-                        <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td>
-                        <!-- <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td> --> 
+                        <!-- <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td> -->
+                        <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td>
                         <td>{{row["Ilat"]}}</td>
                         <td>{{row["Ilon"]}}</td>
                         <td>{{row["Itime"]}}</td>
@@ -219,8 +219,7 @@ function timeConverter(UNIX_timestamp){
                         <td><img style="max-width:100px;" src="http://ec2-34-207-75-73.compute-1.amazonaws.com/api/{{row['Ipicpath']}}"></td>
                         
                         
-                        
-                        
+              
                         <td><center>
                                 <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
                                 data-id="{{row['issue_id']}}" data-uid="{{row['user_id']}}" data-assignto="{{row['IassignedTo']}}" data-description="{{row['Idescription']}}" 
@@ -238,4 +237,5 @@ function timeConverter(UNIX_timestamp){
 </div>
 
 {% endblock %}
+
 

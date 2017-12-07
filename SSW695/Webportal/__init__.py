@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, session
+from flask_googlemaps import GoogleMaps
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from flask_principal import Principal, Permission, RoleNeed
 import sqlite3 as sql 
 from functools import wraps
 from passlib.hash import sha256_crypt
@@ -17,10 +19,13 @@ except ImportError:
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
+app.config['GOOGLEMAPS_KEY'] = "AIzaSyDHyTgvQ2NzRpUubu_WyG7q5HMKYoL6wbc"
 
 
 api_url = 'http://ec2-34-207-75-73.compute-1.amazonaws.com/api/'
-            
+GoogleMaps(app)
+#GoogleMaps(app, key="8JZ7i18MjFuM35dJHq70n3Hx4")
+
 
 def connection():
 	try:
@@ -44,12 +49,16 @@ def method_not_found(e):
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if 'logged_in' in session:
+        print(session['user_type'])
+        if ('logged_in' in session) and session['user_type'] == 3  :
             return f(*args, **kwargs)
         else:
-            flash("You need to login first")
-            return redirect(url_for('login'))
+            flash("You dont have permission to access this page")
+            
+            return redirect(url_for('no_permission'))
     return wrap
+
+
 
 #login
 @app.route('/',methods=["GET","POST"])
@@ -65,14 +74,20 @@ def login():
         #call api 
         response = urllib2.urlopen(url_req).read().decode('utf8') 
         response_json = json.loads(response) #convert string to dictionary
-
-        if response_json['status_code'] == 200: #if response is successful
+        print(response_json)
+        if response_json['status_code'] == 200 and response_json['result'][0]['UserType'] != 1 : #if response is successful
             session['logged_in'] = True
             session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
             session['id'] = response_json['result'][0]['UserID']
-            return redirect(url_for("dashboard"))
+            session['user_type'] = response_json['result'][0]['UserType']
+            print(session['user_type'])
+            if response_json['result'][0]['UserType'] == 3:
+                return redirect(url_for("dashboard"))
+            elif response_json['result'][0]['UserType'] == 2:
+                return redirect(url_for("dashboard_maintenance"))
+
         else:
-            error = str(response_json['message'])
+            error = "Invalid Credintials"
             flash(error)
     return render_template("login.html")
 
@@ -257,14 +272,13 @@ def addAdmin():
 @app.route('/issues/')
 @login_required
 def issues():
-    #Fetch admin from database -> Fetch admin list from server
-    page_number = 1
-    url_get_people_list = api_url + 'get_issue_list/' + str(page_number) 
+    url_get_people_list = api_url + 'get_issue' 
     url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-        return render_template("issues.html", rows = response_json['result'])  
+        print(response_json['issues'])
+        return render_template("issues.html", rows = response_json['issues'])  
     else:
         flash(message)
         return redirect(url_for('issues'))
@@ -466,10 +480,35 @@ def dashboard():
 
 
 @app.route('/blank-page/')
-@login_required
 def blankpage():
     return render_template("blank-page.html")
 
+
+@app.route('/dashboard_main/')
+def dashboard_main():
+    return redirect(url_for('dashboard_maintenance'))
+
+
+@app.route('/dashboard_maintenance/')
+def dashboard_maintenance():
+    url_get_people_list = api_url + 'get_issue_list/' + str(session['id'])
+    print(url_get_people_list )
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        print(response_json['issues'])
+        return render_template("dashboard_maintenance.html", rows = response_json['issues'])  
+    else:
+        messgae = response_json['message']
+        flash(message)
+        return redirect(url_for('dashboard_maintenance'))
+
+
+
+@app.route('/no_permission/')
+def no_permission():
+    return render_template("no_permission.html")
 
 #display TimeStamp
 @app.template_filter('ctime')
