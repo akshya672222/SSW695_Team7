@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, session
+from flask_googlemaps import GoogleMaps
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from flask_principal import Principal, Permission, RoleNeed
 import sqlite3 as sql 
 from functools import wraps
 from passlib.hash import sha256_crypt
@@ -8,6 +10,7 @@ import datetime
 import os
 import gc
 import json
+import time
 try:
     import urllib.request as urllib2
 except ImportError:
@@ -17,10 +20,13 @@ except ImportError:
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
+app.config['GOOGLEMAPS_KEY'] = "AIzaSyDHyTgvQ2NzRpUubu_WyG7q5HMKYoL6wbc"
 
 
 api_url = 'http://ec2-34-207-75-73.compute-1.amazonaws.com/api/'
-            
+GoogleMaps(app)
+#GoogleMaps(app, key="8JZ7i18MjFuM35dJHq70n3Hx4")
+
 
 def connection():
 	try:
@@ -44,12 +50,25 @@ def method_not_found(e):
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if 'logged_in' in session:
+        print(session['user_type'])
+        if ('logged_in' in session) and session['user_type'] == 3  :
             return f(*args, **kwargs)
         else:
-            flash("You need to login first")
-            return redirect(url_for('login'))
+            
+            return redirect(url_for('no_permission'))
     return wrap
+
+def maintenance_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        print(session['user_type'])
+        if ('logged_in' in session) and session['user_type'] == 2  :
+            return f(*args, **kwargs)
+        else:
+            
+            return redirect(url_for('no_permission'))
+    return wrap
+
 
 #login
 @app.route('/',methods=["GET","POST"])
@@ -65,37 +84,52 @@ def login():
         #call api 
         response = urllib2.urlopen(url_req).read().decode('utf8') 
         response_json = json.loads(response) #convert string to dictionary
-
-        if response_json['status_code'] == 200: #if response is successful
+        print(response_json)
+        if response_json['status_code'] == 200 and response_json['result'][0]['UserType'] != 1 : #if response is successful
             session['logged_in'] = True
             session['name'] = str(response_json['result'][0]['FirstName']) + ' ' + str(response_json['result'][0]['LastName']) 
             session['id'] = response_json['result'][0]['UserID']
-            return redirect(url_for("dashboard"))
+            session['user_type'] = response_json['result'][0]['UserType']
+            print(session['user_type'])
+            if response_json['result'][0]['UserType'] == 3:
+                return redirect(url_for("dashboard"))
+            elif response_json['result'][0]['UserType'] == 2:
+                return redirect(url_for("dashboard_maintenance"))
+
         else:
-            error = str(response_json['message'])
+            error = "Invalid Credintials"
             flash(error)
     return render_template("login.html")
 
 #logout
 @app.route("/logout/")
-@login_required
 def logout():
     session.clear()
     flash("You have been logged out!")
     return redirect(url_for('login'))
 
 #forgot password
-@app.route('/forgotPassword/')
+@app.route('/')
 def resetPassword():
-    url_get_people_list = api_url + 'reset_password'
-    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST')
-    response = urllib2.urlopen(url_req).read().decode('utf8')
-    response_json = json.loads(response)
-    if response_json['status_code'] == 200:
-        return render_template("login.html")  
-    else:
-        flash("Please log in with your new password")
-        return redirect(url_for('login'))
+    try:
+        if request.method == "POST":
+            url_get_people_list = api_url + 'forgot_password'
+            payload = {'email': request.form['email']}
+            print(payload)
+            json_data = json.dumps(payload).encode('utf8')
+            url_req = urllib2.Request(url_get_people_list, headers={'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data=json_data)
+            response = urllib2.urlopen(url_req).read().decode('utf8')
+            response_json = json.loads(response)
+            message = ''
+            if response_json['status_code'] == 200:
+                message = 'Please check your email!'
+            else:
+                message = response_json['message']
+            flash(message)
+            return redirect(url_for('login'))
+    except Exception as e:
+        return render_template("404.html")  
+    return redirect(url_for('login'))
 
 #display profile
 @app.route('/profile/')
@@ -267,32 +301,48 @@ def addAdmin():
 @app.route('/issues/')
 @login_required
 def issues():
-    #Fetch admin from database -> Fetch admin list from server
-    page_number = 1
-    url_get_people_list = api_url + 'get_issue_list/' + str(page_number) 
+    url_get_people_list = api_url + 'get_issue' 
     url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
     response = urllib2.urlopen(url_req).read().decode('utf8')
     response_json = json.loads(response)
     if response_json['status_code'] == 200:
-        return render_template("issues.html", rows = response_json['result'])  
+        print(response_json['issues'])
+        return render_template("issues.html", rows = response_json['issues'])  
     else:
         flash(message)
         return redirect(url_for('issues'))
 
 @app.route('/updateIssue/',methods=["POST"])
-@login_required
 def updateIssue():
-    con, cur = connection()
+    url_get_people_list = api_url + 'update_issue'
+    print("deokdoek")
+    print(url_get_people_list)
     try:
-            cur.execute("UPDATE Issues SET priority = ? , description = ? , location = ?, status = ? WHERE IssID = ?", 
-            (request.form['priority'],request.form['description'], request.form['location'],request.form['status'], request.form['id']))
-            con.commit()
-            flash("Updated Successfuly!")
-            return redirect(url_for('issues'))
-
+        print(request.form)
+        payload = {
+                    'issue_id': request.form['id'],
+                    'issue_status': request.form['status'], #sha256_crypt.hash(request.form['password']),
+                    'issue_assignedTo': request.form['assignto'],
+                    'issue_updateTime':time.time() ,
+                    'issue_updateBy': session['id']
+                }
+        print(payload)
+        json_data = json.dumps(payload).encode('utf8')
+        url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data = json_data)
+        response = urllib2.urlopen(url_req).read().decode('utf8')
+        response_json = json.loads(response)
+        if response_json['status_code'] == 200:
+            flash(response_json['message'])
+            return redirect(url_for('dashboard_maintenance')) 
+        else:
+            flash(response_json['message'])
+            return redirect(url_for('dashboard_maintenance'))
     except Exception as e:
-        return render_template("404.html")  
-    return redirect(url_for('issues'))
+        print('error'+str(e))
+    flash("response_json['message']")
+    return redirect(url_for('dashboard_maintenance'))
+    
+
 
 
 #display categories
@@ -479,10 +529,35 @@ def forgotPassword():
 
 
 @app.route('/blank-page/')
-@login_required
 def blankpage():
     return render_template("blank-page.html")
 
+
+@app.route('/dashboard_main/')
+def dashboard_main():
+    return redirect(url_for('dashboard_maintenance'))
+
+
+@app.route('/dashboard_maintenance/')
+def dashboard_maintenance():
+    url_get_people_list = api_url + 'get_issue_list/' + str(session['id'])
+    print(url_get_people_list )
+    url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='GET')
+    response = urllib2.urlopen(url_req).read().decode('utf8')
+    response_json = json.loads(response)
+    if response_json['status_code'] == 200:
+        print(response_json['issues'])
+        return render_template("dashboard_maintenance.html", rows = response_json['issues'])  
+    else:
+        messgae = response_json['message']
+        flash(message)
+        return redirect(url_for('dashboard_maintenance'))
+
+
+
+@app.route('/no_permission/')
+def no_permission():
+    return render_template("no_permission.html")
 
 #display TimeStamp
 @app.template_filter('ctime')
@@ -493,3 +568,4 @@ def timectime(s):
 if __name__ == "__main__":
     #app.secret_key = '39ie94884ur4yr75yr57py'
     app.run()
+    

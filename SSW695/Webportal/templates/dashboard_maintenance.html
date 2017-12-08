@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %} Blank page {% endblock %}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}"  rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
+    <link href="{{ url_for('static', filename='css/dataTables.responsive.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css">
+
+        <!-- jQuery -->
+        <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <!-- <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+        <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script> -->
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
+    
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/dashboard/">Reportal - Maintenance</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+
+
+                {% if session.logged_in %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>  Hi {{session.name}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-menu-left" >
+                            <li>
+                                <a href="/profile/"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="/logout/"><i class="fa fa-fw fa-sign-out"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                {% endif %}
+                
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+
+                    {% set navigation_bar = [('/dashboard/', 'dashboard', ' Dashboard','fa fa-fw fa-dashboard')] -%}
+                    {% set active_page = active_page|default('dashboard') -%}
+                    <ul id="navigation" class="nav navbar-nav side-nav">
+                        {% for href, id, caption, icon in navigation_bar %}
+                        <li {% if id == active_page %} class="active"
+                            {% endif%}> <a href="{{ href|e }}"> <i class="{{ icon }}"> </i> {{ caption|e }} </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid" style="min-height: 690px;">
+
+                <script type="text/javascript">
+                    function form_submit() {
+                      document.getElementById("add_form").submit();
+                     }
+                    
+                    function form_submit() {
+                      document.getElementById("update_form").submit();
+                     }
+                        
+                     $(document).on("click", ".open-AddBookDialog", function () {
+                     var id = $(this).data('issID');
+                     var status = $(this).data('statusID');
+                     var assignto = $(this).data('assignto');
+  
+                     $(".modal-body #issid").val( id );
+                     $(".modal-body #status").val( status );
+                     $(".modal-body #assignto").val( assignto );
+
+                });
+                
+                
+                $(document).on("click", "table tbody tr  td", function (){
+                    $("#view").modal("show");
+                    $("#issID").val($(this).closest('tr').children()[0].textContent);
+                    $("#uID").val($(this).closest('tr').children()[1].textContent);
+                    $("#assignto").val($(this).closest('tr').children()[2].textContent);
+                    $("#description").val($(this).closest('tr').children()[3].textContent);
+                
+                
+                });
+
+                </script>
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Issues
+                            <small> list of all Issues </small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-file"></i>  Issues
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="row">    
+                    <div class="col-sm-8" align="left">
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-success" role="alert" >
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                {{message}}
+                                            </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                    </div>
+                
+                
+                
+                   
+                <!-- Modal Edit  row -->
+                
+                <div class="modal fade" id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Update Issue Details</h4>
+                                </div>
+                                <div class="modal-body" >
+                                    <form role="form" method="post" action="/updateIssue/" id="update_form">
+                                        <div class="form-group">
+                                            <label>Issue ID</label>
+                                            <input class="form-control" name="id" type="text" id ="issID" value="" readonly >
+                                        </div>
+                                        <div class="form-group">
+                                                <label>Issue Status</label>
+                                                <input class="form-control" name="status" type="text" id ="statusID" value=""  >  
+                                        </div>
+                                        <div class="form-group">
+                                                <label>Assigned To</label>
+                                                <input class="form-control" name="assignto" type="text" id ="assignto" value="" readonly >  
+                                        </div>
+
+                                </div>
+                                <div class="modal-footer ">
+                                <button type="submit"  class="btn btn-primary btn-default btn-block" value="update">Update</button>
+                                </div>
+                            </form>
+                            </div>
+                        <!-- /.modal-dialog --> 
+                        </div>
+                    <!-- /.modal-dialog --> 
+                    </div>
+                
+                <!-- View Issue row -->
+                
+                <div class="modal fade" id="view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Issue Details</h4>
+                                </div>
+                                <div class="modal-body" id="orderDetails">
+                                    <div class="form-group">
+                                    <label>Issue ID </label>
+                                    </br>
+                                    <input  type="text" id ="issID"  readonly  style="border: 0px">
+                                    </div>
+                                    <div class="form-group">
+                                            <label>User ID </label>
+                                            </br>
+                                            <input  type="text" id ="uID"  readonly  style="border: 0px">
+                                    </div>
+                                    <div class="form-group">
+                                            <label>Assigned To</label>
+                                            </br>
+                                            <input  type="text" id ="assignto"  readonly  style="border: 0px">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        </br>
+                                        <input  type="text" id ="description"  readonly  style="border: 0px">
+                                </div>
+                
+                                </div>
+                
+                            
+                            </div>
+                        <!-- /.modal-dialog --> 
+                        </div>
+                    <!-- /.modal-dialog --> 
+                    </div>
+                
+                <div class="row">
+                    </br>
+                </div>
+                
+                <div class="row">
+                
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="example" cellspacing="0" width="100%" >
+                                <thead>
+                                    <tr class = "active">
+                                        <th>Issue ID</th>
+                                        <th>Reported by</th>
+                                        <th>Assigned to </th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Priority</th>
+                                        
+                                        <th>lat</th>
+                                        <th>lon</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>image</th>
+                                        <th><center>Edit</center></th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                {% for row in rows %}
+                                    <tr>
+                                        <td>{{row["Issue_id"]}}</td>
+                                        <td>{{row["Iuid"]["user_fname"]}}</td>
+                                        <td>{{row["IassignedTo"]["user_fname"]}}</td>
+                                        <td>{{row["Idescription"]}}</td>
+                                        <td>{{row["Icategory"]["category_name"]}}</td>
+                                        <td>{{row["Ipriority"]["priority_name"]}}</td>
+                                        <!-- <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td> -->
+                                        <!-- <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td> -->
+                                        <td>{{row["Ilat"]}}</td>
+                                        <td>{{row["Ilon"]}}</td>
+                                        <td>{{row["Itime"]}}</td>
+                                        <td>{{row["Istatus_id"]}}</td>
+                                        <td><img style="max-width:100px;" src="http://ec2-34-207-75-73.compute-1.amazonaws.com/api/{{row['Ipicpath']}}"></td>
+                                        
+                                        
+                              
+                                        <td><center>
+                                                <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
+                                                data-id="{{row['issue_id']}}" data-uid="{{row['user_id']}}" data-assignto="{{row['IassignedTo']}}" data-description="{{row['Idescription']}}" 
+                                                data-location="{{row['issue_lat']}}" data-status="{{row['status_id']}}" data-target="#edit"  href="#edit">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </button>
+                                        </center></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                
+                        </div>
+                    </div>
+                </div>
+                
+
+                
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+
+</body>
+
+</html>
+
+

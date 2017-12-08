@@ -19,14 +19,14 @@
      $(document).on("click", ".open-AddBookDialog", function () {
      var id = $(this).data('id');
      var Uid = $(this).data('uid');
-     var priority = $(this).data('priority');
+     var assignto = $(this).data('assignto');
      var description = $(this).data('description');
      var location = $(this).data('location');
      var status = $(this).data('status');
 
      $(".modal-body #IssID").val( id );
      $(".modal-body #IssUID").val( Uid );
-     $(".modal-body #priority").val( priority );
+     $(".modal-body #assignto").val( assignto );
      $(".modal-body #description").val( description );
      $(".modal-body #location").val( location );
      $(".modal-body #status").val( status );
@@ -37,11 +37,24 @@ $(document).on("click", "table tbody tr  td", function (){
     $("#view").modal("show");
     $("#issID").val($(this).closest('tr').children()[0].textContent);
     $("#uID").val($(this).closest('tr').children()[1].textContent);
-    $("#priority").val($(this).closest('tr').children()[2].textContent);
+    $("#assignto").val($(this).closest('tr').children()[2].textContent);
+    $("#description").val($(this).closest('tr').children()[3].textContent);
 
 
 });
 
+function timeConverter(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  }
 </script>
 
 <div class="row">
@@ -75,58 +88,9 @@ $(document).on("click", "table tbody tr  td", function (){
             {% endwith %}
     </div>
 
-    <div class="col-sm-4" align="right">
-        <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">
-            <i class="fa fa-plus"></i>  Add Issue
-            </button>
-    </div>
 
 
-    <!-- Modal Add Table-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Add Event</h4>
-            </div>
-            <div class="modal-body">
-                <form role="form" method="post">
-                <fieldset>
-
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <input class="form-control" placeholder="First Name" name="fname" type="text" value="{{request.form.fname}}" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name</label>
-                        <input class="form-control" placeholder="Last Name" name="lname" type="text" value="{{request.form.lname}}">
-                    </div>
-                    <div class="form-group">
-                        <label>E-mail</label>
-                        <input class="form-control" placeholder="E-mail" name="email" type="email" value="{{request.form.email}}" >
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input class="form-control" placeholder="Password" name="password" type="password" value="{{request.form.password}}">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <input class="form-control" placeholder="Re-enter Password" name="password" type="password" value="{{request.form.password}}">
-                    </div>
-
-                </fieldset>
-                </form>
-            </div>
-            <div class="modal-footer">
-            <button type="submit"  class="btn btn-primary btn-default btn-block" value="add">Add</button>
-
-            </div>
-        </div>
-        </div>
-    </div>
-</div>
-
+   
 <!-- Modal Edit  row -->
 
 <div class="modal fade" id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
@@ -147,8 +111,8 @@ $(document).on("click", "table tbody tr  td", function (){
                                 <input class="form-control" name="IssUID" type="text" id ="IssUID" value="" readonly >  
                         </div>
                         <div class="form-group">
-                                <label>Priority</label>
-                                <input class="form-control" name="priority" type="text" id ="priority" value=""  >  
+                                <label>assignto</label>
+                                <input class="form-control" name="assignto" type="text" id ="assignto" value=""  >  
                         </div>
                         <div class="form-group">
                                 <label>Description</label>
@@ -194,10 +158,15 @@ $(document).on("click", "table tbody tr  td", function (){
                             <input  type="text" id ="uID"  readonly  style="border: 0px">
                     </div>
                     <div class="form-group">
-                            <label>Priority</label>
+                            <label>Assigned To</label>
                             </br>
-                            <input  type="text" id ="priority"  readonly  style="border: 0px">
+                            <input  type="text" id ="assignto"  readonly  style="border: 0px">
                     </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        </br>
+                        <input  type="text" id ="description"  readonly  style="border: 0px">
+                </div>
 
                 </div>
 
@@ -220,26 +189,42 @@ $(document).on("click", "table tbody tr  td", function (){
                 <thead>
                     <tr class = "active">
                         <th>Issue ID</th>
-                        <th>User ID</th>
-                        <th>Priority </th>
+                        <th>Reported by</th>
+                        <th>Assigned to </th>
                         <th>Description</th>
-                        <th>Location</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>lat</th>
+                        <th>lon</th>
+                        <th>Time</th>
                         <th>Status</th>
+                        <th>image</th>
                         <th><center>Edit</center></th>
                     </tr>
                 </thead>
                 <tbody >
                 {% for row in rows %}
                     <tr>
-                        <td>{{row["issue_id"]}}</td>
-                        <td>{{row["user_id"]}}</td>
-                        <td>{{row["issue_priority"]}}</td>
-                        <td>{{row["issue_description"]}}</td>
-                        <td>{{row["issue_lat"]}}</td>
-                        <td>{{row["status_id"]}}</td>
+                        <td>{{row["Issue_id"]}}</td>
+                        <td>{{row["Iuid"]["user_fname"]}}</td>
+                        <td>{{row["IassignedTo"]["user_fname"]}}</td>
+                        <td>{{row["Idescription"]}}</td>
+                        <td>{{row["Icategory"]["category_name"]}}</td>
+                        <td>{{row["Ipriority"]["priority_name"]}}</td>
+                        <!-- <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td> -->
+                        <!-- <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td> -->
+                        <td>{{row["Ilat"]}}</td>
+                        <td>{{row["Ilon"]}}</td>
+                        <td>{{row["Itime"]}}</td>
+                        <td>{{row["Istatus_id"]}}</td>
+                        <td><img style="max-width:100px;" src="http://ec2-34-207-75-73.compute-1.amazonaws.com/api/{{row['Ipicpath']}}"></td>
+                        
+                        
+                        
+                        
                         <td><center>
                                 <button class="open-AddBookDialog btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" 
-                                data-id="{{row['issue_id']}}" data-uid="{{row['user_id']}}" data-priority="{{row['issue_priority']}}" data-description="{{row['issue_description']}}" 
+                                data-id="{{row['issue_id']}}" data-uid="{{row['user_id']}}" data-assignto="{{row['IassignedTo']}}" data-description="{{row['Idescription']}}" 
                                 data-location="{{row['issue_lat']}}" data-status="{{row['status_id']}}" data-target="#edit"  href="#edit">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </button>
