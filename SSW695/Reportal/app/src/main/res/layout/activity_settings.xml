@@ -84,7 +84,7 @@
                     android:layout_height="50dp"
                     android:layout_weight="8"
                     android:contentDescription="Email"
-                    android:hint="Email Address"
+                    android:hint="vader@stevens.edu"
                     android:inputType="textEmailAddress"
                     android:padding="3dp"
                     android:visibility="visible"

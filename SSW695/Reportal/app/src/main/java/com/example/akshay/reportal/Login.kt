@@ -274,7 +274,7 @@ class Login : AppCompatActivity() {
                             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+priorities)
                             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+result)
 
-                            val intent = Intent(applicationContext, Homepage::class.java)
+                            Intent(applicationContext, Homepage::class.java)
 
                             startActivity(intent)
                         }
@@ -282,52 +282,14 @@ class Login : AppCompatActivity() {
 
                     //System.out.println("^^^^^^^^^^^^^^^^************************ here "+status_code);
 
-                    System.out.println("Printing json block array: "+ resultJsonBlock.getJSONArray("Subscription"));
+                    //System.out.println("Printing json block array: "+ resultJsonBlock.getJSONArray("Subscription"));
 
 
                     val intent = Intent(applicationContext, Homepage::class.java)
 
                     startActivity(intent)
                 }
-                /*
-                else if (responseCode >= 400 && responseCode <= 499) {
-                    val br = BufferedReader(InputStreamReader(conn.errorStream))
-                    val builder = StringBuilder()
-                    for (line in br.readLine()){
-                        while (line != null) {builder.append(line + "\n") }
-                    }
-                    br.close()
-                    //this is to make UI changes which are running on main thread
-                    val mainHandler = Handler(applicationContext.mainLooper)
-                    val myRunnable = object : Runnable {
-                        internal var firstKeyDown = false
-                        override fun run() {
-                            val userName = findViewById<View>(R.id.userName) as EditText
-                            val password = findViewById<View>(R.id.password) as EditText
-                            //val errorMsg = findViewById(R.id.errMsg) as TextView
-                            userName.requestFocus()
-                            userName.setText("")
-                            password.setText("")
-                            //errorMsg.text = "Wrong Credentials. Please Try again."
-                            System.out.println("firstKeyDown here 1 "+ firstKeyDown);
-                            System.out.println("In here 1 "+ firstKeyDown);
-                            if (!firstKeyDown) userName.setOnKeyListener(object : View.OnKeyListener {
 
-                                override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-                                    System.out.println("fin here 2 "+ firstKeyDown);
-                                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                                        //errorMsg.text = ""
-                                        firstKeyDown = true
-                                        return false
-                                    }
-                                    return true
-                                }
-                            })
-                        } // This is your code
-                    }
-                    mainHandler.post(myRunnable)
-                }
-                */
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: JSONException) {

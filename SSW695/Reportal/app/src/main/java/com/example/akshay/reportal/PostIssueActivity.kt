@@ -28,6 +28,7 @@ import java.io.FileNotFoundException
 import java.nio.file.Files.write
 import android.app.PendingIntent.getActivity
 import android.support.v7.app.AlertDialog
+import java.io.ByteArrayOutputStream
 
 
 class PostIssueActivity : AppCompatActivity() {
@@ -66,11 +67,11 @@ class PostIssueActivity : AppCompatActivity() {
             if (extras == null) {
                 println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in if with extras")
                 newString = ""
-                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ newString)
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ newString)
             } else {
                 println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in else with extras")
                 newString = extras.getString("categoriesArray")
-                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ newString)
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ newString)
             }
         } else {
             println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  in last else of first if")
@@ -144,8 +145,11 @@ class PostIssueActivity : AppCompatActivity() {
             }else{
                 println("IN on click!")
                 val intent = Intent(applicationContext, PreviewSubmission::class.java)
+                println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "+ intent)
                 intent.putExtra("image", imageCapturedBitmap)
+                println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "+ imageCapturedBitmap)
                 println("hELLO!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@")
+                intent.getStringExtra("resultArray")
                 startActivity(intent)
             }
         }
@@ -194,19 +198,33 @@ class PostIssueActivity : AppCompatActivity() {
                 }
             }
             GALLERY_REQUEST_CODE -> {
-                print("Im in the gallery!")
+                println("Im in the gallery!")
 
                 if (resultCode === Activity.RESULT_OK && data != null) {
                     try {
-                        print("in try block: "+data)
+                        println("in try block: "+data)
                         val imageUri = data?.getData()
+                        println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ imageUri "+ imageUri)
                         val imageStream = contentResolver.openInputStream(imageUri)
+                        println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ imageStream " + imageStream)
                         val selectedImage = BitmapFactory.decodeStream(imageStream)
+                        println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ selectedImage " + selectedImage)
+
+
+
+                        val baos = ByteArrayOutputStream()
+                        selectedImage.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+
                         imageCapturedBitmap = selectedImage
+
                         capturedImageView.setImageBitmap(selectedImage)
+                        println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ imageCapturedBitmap " + imageCapturedBitmap)
+                        //println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ capturedImageView.setImageBitmap(selectedImage) " + capturedImageView.setImageBitmap(selectedImage))
+
                         //capturedImageView.setImageBitmap(data.extras.get("data") as Bitmap)
                     } catch (e: FileNotFoundException) {
                         println("In catch of gallery!")
+
                         e.printStackTrace()
                         Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
                     }
