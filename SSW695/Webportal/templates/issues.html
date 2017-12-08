@@ -189,12 +189,12 @@ function timeConverter(UNIX_timestamp){
                 <thead>
                     <tr class = "active">
                         <th>Issue ID</th>
-                        <th>Reported by -user id-</th>
+                        <th>Reported by</th>
                         <th>Assigned to </th>
                         <th>Description</th>
                         <th>Category</th>
+                        <th>Priority</th>
                         <th>lat</th>
-                        <th>ladt</th>
                         <th>lon</th>
                         <th>Time</th>
                         <th>Status</th>
@@ -206,12 +206,13 @@ function timeConverter(UNIX_timestamp){
                 {% for row in rows %}
                     <tr>
                         <td>{{row["Issue_id"]}}</td>
-                        <td>{{row["Iuid"]}}</td>
-                        <td>{{row["IassignedTo"]}}</td>
+                        <td>{{row["Iuid"]["user_fname"]}}</td>
+                        <td>{{row["IassignedTo"]["user_fname"]}}</td>
                         <td>{{row["Idescription"]}}</td>
-                        <td>{{row["Icategory_id"]}}</td>
-                        <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td>
-                        <!-- <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td> --> 
+                        <td>{{row["Icategory"]["category_name"]}}</td>
+                        <td>{{row["Ipriority"]["priority_name"]}}</td>
+                        <!-- <td>{{googlemap("my_awesome_map", lat=0.23234234, lng=-0.234234234, markers=[(0.23234234, -0.234234234)]) }} </td> -->
+                        <!-- <td>{{googlemap("my_awesome_map", lat=row['Ilat'], lng=row['Ilon'], markers=[(row['Ilat'], row['Ilon'])] )  }}</td> -->
                         <td>{{row["Ilat"]}}</td>
                         <td>{{row["Ilon"]}}</td>
                         <td>{{row["Itime"]}}</td>

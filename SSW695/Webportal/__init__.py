@@ -10,6 +10,7 @@ import datetime
 import os
 import gc
 import json
+import time
 try:
     import urllib.request as urllib2
 except ImportError:
@@ -57,6 +58,16 @@ def login_required(f):
             return redirect(url_for('no_permission'))
     return wrap
 
+def maintenance_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        print(session['user_type'])
+        if ('logged_in' in session) and session['user_type'] == 2  :
+            return f(*args, **kwargs)
+        else:
+            
+            return redirect(url_for('no_permission'))
+    return wrap
 
 
 #login
@@ -92,7 +103,6 @@ def login():
 
 #logout
 @app.route("/logout/")
-@login_required
 def logout():
     session.clear()
     flash("You have been logged out!")
@@ -303,19 +313,36 @@ def issues():
         return redirect(url_for('issues'))
 
 @app.route('/updateIssue/',methods=["POST"])
-@login_required
 def updateIssue():
-    con, cur = connection()
+    url_get_people_list = api_url + 'update_issue'
+    print("deokdoek")
+    print(url_get_people_list)
     try:
-            cur.execute("UPDATE Issues SET priority = ? , description = ? , location = ?, status = ? WHERE IssID = ?", 
-            (request.form['priority'],request.form['description'], request.form['location'],request.form['status'], request.form['id']))
-            con.commit()
-            flash("Updated Successfuly!")
-            return redirect(url_for('issues'))
-
+        print(request.form)
+        payload = {
+                    'issue_id': request.form['id'],
+                    'issue_status': request.form['status'], #sha256_crypt.hash(request.form['password']),
+                    'issue_assignedTo': request.form['assignto'],
+                    'issue_updateTime':time.time() ,
+                    'issue_updateBy': session['id']
+                }
+        print(payload)
+        json_data = json.dumps(payload).encode('utf8')
+        url_req = urllib2.Request(url_get_people_list, headers={ 'User-Agent': 'Safari/537.36', 'Content-Type': 'application/json'}, method='POST', data = json_data)
+        response = urllib2.urlopen(url_req).read().decode('utf8')
+        response_json = json.loads(response)
+        if response_json['status_code'] == 200:
+            flash(response_json['message'])
+            return redirect(url_for('dashboard_maintenance')) 
+        else:
+            flash(response_json['message'])
+            return redirect(url_for('dashboard_maintenance'))
     except Exception as e:
-        return render_template("404.html")  
-    return redirect(url_for('issues'))
+        print('error'+str(e))
+    flash("response_json['message']")
+    return redirect(url_for('dashboard_maintenance'))
+    
+
 
 
 #display categories
@@ -541,3 +568,4 @@ def timectime(s):
 if __name__ == "__main__":
     #app.secret_key = '39ie94884ur4yr75yr57py'
     app.run()
+    
